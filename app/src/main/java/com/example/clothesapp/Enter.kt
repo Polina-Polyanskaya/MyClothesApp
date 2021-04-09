@@ -19,12 +19,12 @@ class Enter : AppCompatActivity() {
     private lateinit var login: EditText
     private lateinit var password: EditText
     private lateinit var enter: Button
-    private var isUnique = true
     private val list: ArrayList<User> = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter)
+        getSupportActionBar()?.hide();
         firebaseDataBase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
         login = findViewById(R.id.LoginEnter)
@@ -78,13 +78,12 @@ class Enter : AppCompatActivity() {
         })
     }
 
-    fun saveEnterData()
+    fun saveEnterData():Boolean
     {
         val fieldLogin = login.text.toString()
         val fieldPassword = password.text.toString()
-        isUnique = true
+        var isUnique = true
         if (!hasAnyErrors(fieldLogin, fieldPassword)) {
-            println(fieldPassword.toString())
             for (item in list) {
                 if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
                     isUnique = false
@@ -96,11 +95,11 @@ class Enter : AppCompatActivity() {
                 toast.show()
             }
         }
+        return isUnique
     }
 
     fun toNextActivity(view:View) {
-        saveEnterData()
-        if (!isUnique) {
+        if (!saveEnterData()) {
             val intent = Intent(this, MyCatalog::class.java)
             startActivity(intent)
         }

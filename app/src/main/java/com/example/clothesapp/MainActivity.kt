@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textAboutReg)
+        getSupportActionBar()?.hide();
         val str: String = getResources().getString(R.string.toReg)
         val spannableString = SpannableString(str)
         val clickableSpan = object : ClickableSpan() {

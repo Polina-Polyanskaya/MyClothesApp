@@ -26,12 +26,12 @@ class Registration : AppCompatActivity() {
     private lateinit var firebaseDataBase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private var isFirstTime = true
-    private var isUnique = true
     private val list: ArrayList<User> = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
+        getSupportActionBar()?.hide()
         firebaseDataBase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
         login = findViewById(R.id.Login)
@@ -42,7 +42,7 @@ class Registration : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {
                 if (!s.toString().startsWith("+79")) {
                     if (isFirstTime) {
-                        phone.setText("+79" + s)
+                        phone.setText("+79$s")
                         isFirstTime = false
                     } else
                         phone.setText("+79")
@@ -114,7 +114,6 @@ class Registration : AppCompatActivity() {
         super.onStart()
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                println("count    " + dataSnapshot.child("users").childrenCount)
                 for (ds in dataSnapshot.child("users").children) {
                     list.add( ds.getValue(User::class.java)!!)
                 }
@@ -126,14 +125,14 @@ class Registration : AppCompatActivity() {
         })
     }
 
-    fun saveData() {
+    fun saveData():Boolean {
         val fieldLogin = login.text.toString()
         val fieldPhone = phone.text.toString()
         val fieldEmail = email.text.toString()
         val fieldPassword = password.text.toString()
-        isUnique = true
+        var isUnique = false
         if (!hasAnyErrors(fieldLogin, fieldPhone, fieldEmail, fieldPassword)) {
-            println(fieldPassword.toString())
+            isUnique=true
             val newUser: User = User(fieldLogin, fieldPhone, fieldEmail, fieldPassword)
             for (item in list) {
                 if (newUser.equals(item))
@@ -148,11 +147,11 @@ class Registration : AppCompatActivity() {
                 toast.show()
             }
         }
+        return isUnique
     }
 
     fun toNextActivity(view:View) {
-        saveData()
-        if (isUnique) {
+        if(saveData()){
             val intent = Intent(this, MyCatalog::class.java)
             startActivity(intent)
         }
