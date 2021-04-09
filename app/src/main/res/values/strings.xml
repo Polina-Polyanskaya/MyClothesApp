@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ClothesApp</string>
+    <string name="toReg">Если у вас нет аккаунта, то зарегистрируйтесь.</string>
+    <string name="enterText">Вход</string>
+    <string name="regText">Регистрация</string>
+    <string name="toEnter">Войти</string>
+    <string name="login">Логин</string>
+    <string name="phone">Телефон</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="toSave">Сохранить</string>
+</resources>

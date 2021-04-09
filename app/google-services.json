@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "290132443548",
+    "firebase_url": "https://myproject-df142-default-rtdb.firebaseio.com",
+    "project_id": "myproject-df142",
+    "storage_bucket": "myproject-df142.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290132443548:android:449c93c5ece2d211838859",
+        "android_client_info": {
+          "package_name": "com.example.clothesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290132443548-nau9h2lvt1pe1m45sir24kva5d3j50ro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo9W7f8wy1zaR52Wa3YIrOgWlciUSxgaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290132443548-nau9h2lvt1pe1m45sir24kva5d3j50ro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
