@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClothesApp">
-        <activity android:name=".MyCatalog"></activity>
+        <activity android:name=".TypeOfSearch"/>
+        <activity android:name=".MyCatalog" />
         <activity android:name=".Registration" />
         <activity android:name=".Enter" />
         <activity android:name=".MainActivity">
