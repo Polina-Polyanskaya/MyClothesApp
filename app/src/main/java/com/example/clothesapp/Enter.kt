@@ -32,6 +32,24 @@ class Enter : AppCompatActivity() {
         login = findViewById(R.id.LoginEnter)
         password = findViewById(R.id.PasswordEnter)
         enter=findViewById(R.id.EnterButton2)
+        databaseReference
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (ds in dataSnapshot.child("users").children) {
+                        list.add(ds.getValue(User::class.java)!!)
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    hasReadError = true
+                    val text = "Проблемы с подключением к базе данных при чтении."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@Enter, text, duration)
+                    toast.show()
+                    val intent = Intent(this@Enter, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            })
     }
 
     fun hasAnyErrors(fieldLogin: String, fieldPassword: String): Boolean {
@@ -62,28 +80,6 @@ class Enter : AppCompatActivity() {
             return true
         }
         return false
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        databaseReference
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.child("users").children) {
-                        list.add(ds.getValue(User::class.java)!!)
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    hasReadError = true
-                    val text = "Проблемы с подключением к базе данных при чтении."
-                    val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@Enter, text, duration)
-                    toast.show()
-                    val intent = Intent(this@Enter, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            })
     }
 
     fun saveEnterData():Boolean

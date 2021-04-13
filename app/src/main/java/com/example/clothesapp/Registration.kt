@@ -61,6 +61,24 @@ class Registration : AppCompatActivity() {
         })
         registrationButton = findViewById(R.id.SaveButton)
         list = ArrayList<User>()
+        databaseReference
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (ds in dataSnapshot.child("users").children) {
+                        list.add(ds.getValue(User::class.java)!!)
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    hasReadError = true
+                    val text = "Проблемы с подключением к базе данных при чтении."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@Registration, text, duration)
+                    toast.show()
+                    val intent = Intent(this@Registration, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            })
     }
 
     fun hasAnyErrors(
@@ -116,28 +134,6 @@ class Registration : AppCompatActivity() {
             return true
         }
         return false
-    }
-
-    override fun onStart() {
-        super.onStart()
-        databaseReference
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.child("users").children) {
-                        list.add(ds.getValue(User::class.java)!!)
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    hasReadError = true
-                    val text = "Проблемы с подключением к базе данных при чтении."
-                    val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@Registration, text, duration)
-                    toast.show()
-                    val intent = Intent(this@Registration, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            })
     }
 
     fun saveData(): Boolean {
