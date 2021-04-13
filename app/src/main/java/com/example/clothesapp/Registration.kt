@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Selection
 import android.text.TextWatcher
-import android.util.Log
-import android.view.Menu
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import java.util.regex.Pattern
 
@@ -23,17 +22,19 @@ class Registration : AppCompatActivity() {
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var registrationButton: Button
-    private lateinit var firebaseDataBase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private var isFirstTime = true
-    private val list: ArrayList<User> = ArrayList<User>()
+    private lateinit var list: ArrayList<User>
+    var hasReadError = false
+    var isUnique =false
+    var a = -1
+    lateinit var newUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
         getSupportActionBar()?.hide()
-        firebaseDataBase = FirebaseDatabase.getInstance()
-        databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
+        databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         login = findViewById(R.id.Login)
         phone = findViewById(R.id.TelephoneEdit)
         email = findViewById(R.id.EmailEdit)
@@ -51,17 +52,21 @@ class Registration : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(
-                    s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+                s: CharSequence, start: Int, count: Int, after: Int ) {}
 
             override fun onTextChanged(
-                    s: CharSequence, start: Int, before: Int, count: Int) {
-            }
+                s: CharSequence, start: Int, before: Int, count: Int) {}
         })
         registrationButton = findViewById(R.id.SaveButton)
+        list = ArrayList<User>()
     }
 
-    fun hasAnyErrors(fieldLogin: String, fieldPhone: String, fieldEmail: String, fieldPassword: String): Boolean {
+    fun hasAnyErrors(
+        fieldLogin: String,
+        fieldPhone: String,
+        fieldEmail: String,
+        fieldPassword: String
+    ): Boolean {
         //логин
         if (fieldLogin.isEmpty()) {
             login.error = "Логин не может быть пустым."
@@ -72,7 +77,8 @@ class Registration : AppCompatActivity() {
             return true
         }
         if (!Pattern.compile("^[_A-z0-9]+$").matcher(fieldLogin).matches()) {
-            login.error = "Логин может содержать только символы латницы, цифры и нижнее подчеркивание."
+            login.error =
+                "Логин может содержать только символы латницы, цифры и нижнее подчеркивание."
             return true
         }
         //телефон
@@ -103,57 +109,88 @@ class Registration : AppCompatActivity() {
             return true
         }
         if (!Pattern.compile("^[_A-z0-9]+$").matcher(fieldPassword).matches()) {
-            password.error = "Пароль может содержать только символы латиницы, цифры и нижнее подчеркивание."
+            password.error =
+                "Пароль может содержать только символы латиницы, цифры и нижнее подчеркивание."
             return true
         }
         return false
     }
 
-    public override fun onStart()
-    {
+    override fun onStart() {
         super.onStart()
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (ds in dataSnapshot.child("users").children) {
-                    list.add( ds.getValue(User::class.java)!!)
+        databaseReference
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (ds in dataSnapshot.child("users").children) {
+                        list.add(ds.getValue(User::class.java)!!)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("Failed to read value.", error.toException())
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    hasReadError = true
+                    val text = "Проблемы с подключением к базе данных при чтении."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@Registration, text, duration)
+                    toast.show()
+                    val intent = Intent(this@Registration, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            })
     }
 
-    fun saveData():Boolean {
+    fun saveData(): Boolean {
         val fieldLogin = login.text.toString()
         val fieldPhone = phone.text.toString()
         val fieldEmail = email.text.toString()
         val fieldPassword = password.text.toString()
-        var isUnique = false
+        isUnique=false
+        newUser = User(fieldLogin, fieldPhone, fieldEmail, fieldPassword)
         if (!hasAnyErrors(fieldLogin, fieldPhone, fieldEmail, fieldPassword)) {
-            isUnique=true
-            val newUser: User = User(fieldLogin, fieldPhone, fieldEmail, fieldPassword)
+            isUnique = true
             for (item in list) {
                 if (newUser.equals(item))
                     isUnique = false
             }
-            if (isUnique) {
-                databaseReference.child("users").push().setValue(newUser)
-            } else {
+            if (!isUnique) {
                 val text = "Такой пользователь уже есть."
                 val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(applicationContext, text, duration)
+                val toast = Toast.makeText(this, text, duration)
                 toast.show()
             }
         }
         return isUnique
     }
 
-    fun toNextActivity(view:View) {
-        if(saveData()){
-            val intent = Intent(this, MyCatalog::class.java)
-            startActivity(intent)
+    interface OnSetDataListener {
+        fun onStart()
+    }
+
+    fun writeData(listener: OnSetDataListener) {
+        listener.onStart()
+    }
+
+    private fun mCheckInforInServer(newUser: User) {
+        writeData(object : OnSetDataListener {
+            override fun onStart() {
+                databaseReference.child("users").push().setValue(newUser).addOnFailureListener {
+                    val text = "Проблемы с записью в базу данных."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@Registration, text, duration)
+                    toast.show()
+                    val intent = Intent(this@Registration, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        })
+    }
+
+    fun toNextActivity(view: View) {
+        if (!hasReadError) {
+            if (saveData()) {
+                mCheckInforInServer(newUser)
+                val intent = Intent(this@Registration, MyCatalog::class.java)
+                startActivity(intent)
+            }
         }
     }
 }
