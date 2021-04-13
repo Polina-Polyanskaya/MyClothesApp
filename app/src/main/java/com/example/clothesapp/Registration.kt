@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import java.util.regex.Pattern
 
@@ -26,8 +25,7 @@ class Registration : AppCompatActivity() {
     private var isFirstTime = true
     private lateinit var list: ArrayList<User>
     var hasReadError = false
-    var isUnique =false
-    var a = -1
+    var isUnique = false
     lateinit var newUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,10 +50,14 @@ class Registration : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(
-                s: CharSequence, start: Int, count: Int, after: Int ) {}
+                s: CharSequence, start: Int, count: Int, after: Int
+            ) {
+            }
 
             override fun onTextChanged(
-                s: CharSequence, start: Int, before: Int, count: Int) {}
+                s: CharSequence, start: Int, before: Int, count: Int
+            ) {
+            }
         })
         registrationButton = findViewById(R.id.SaveButton)
         list = ArrayList<User>()
@@ -143,7 +145,7 @@ class Registration : AppCompatActivity() {
         val fieldPhone = phone.text.toString()
         val fieldEmail = email.text.toString()
         val fieldPassword = password.text.toString()
-        isUnique=false
+        isUnique = false
         newUser = User(fieldLogin, fieldPhone, fieldEmail, fieldPassword)
         if (!hasAnyErrors(fieldLogin, fieldPhone, fieldEmail, fieldPassword)) {
             isUnique = true

@@ -20,6 +20,8 @@ class Enter : AppCompatActivity() {
     private lateinit var password: EditText
     private lateinit var enter: Button
     private val list: ArrayList<User> = ArrayList<User>()
+    var hasReadError = false
+    var isUnique = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,27 +64,33 @@ class Enter : AppCompatActivity() {
         return false
     }
 
-    public override fun onStart()
-    {
+    public override fun onStart() {
         super.onStart()
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (ds in dataSnapshot.child("users").children) {
-                    list.add( ds.getValue(User::class.java)!!)
+        databaseReference
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (ds in dataSnapshot.child("users").children) {
+                        list.add(ds.getValue(User::class.java)!!)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("Failed to read value.", error.toException())
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    hasReadError = true
+                    val text = "Проблемы с подключением к базе данных при чтении."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@Enter, text, duration)
+                    toast.show()
+                    val intent = Intent(this@Enter, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            })
     }
 
     fun saveEnterData():Boolean
     {
         val fieldLogin = login.text.toString()
         val fieldPassword = password.text.toString()
-        var isUnique = true
+        isUnique=true
         if (!hasAnyErrors(fieldLogin, fieldPassword)) {
             for (item in list) {
                 if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
@@ -91,7 +99,7 @@ class Enter : AppCompatActivity() {
             if (isUnique) {
                 val text = "Такого пользователя нет."
                 val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(applicationContext, text, duration)
+                val toast = Toast.makeText(this, text, duration)
                 toast.show()
             }
         }
