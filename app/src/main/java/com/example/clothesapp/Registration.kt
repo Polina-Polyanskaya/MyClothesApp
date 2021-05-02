@@ -187,8 +187,14 @@ class Registration : AppCompatActivity() {
             if (saveData()) {
                 mCheckInforInServer(newUser)
                 val intent = Intent(this@Registration, MyCatalog::class.java)
+                intent.putExtra("message", "employee");
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }

@@ -3,8 +3,6 @@ package com.example.clothesapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -12,7 +10,7 @@ import android.widget.Toast
 import com.google.firebase.database.*
 import java.util.regex.Pattern
 
-class Enter : AppCompatActivity() {
+class EnterUsers : AppCompatActivity() {
 
     private lateinit var firebaseDataBase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
@@ -25,7 +23,7 @@ class Enter : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_enter)
+        setContentView(R.layout.activity_enter_users)
         getSupportActionBar()?.hide();
         firebaseDataBase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
@@ -44,9 +42,9 @@ class Enter : AppCompatActivity() {
                     hasReadError = true
                     val text = "Проблемы с подключением к базе данных при чтении."
                     val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@Enter, text, duration)
+                    val toast = Toast.makeText(this@EnterUsers, text, duration)
                     toast.show()
-                    val intent = Intent(this@Enter, MainActivity::class.java)
+                    val intent = Intent(this@EnterUsers, MainActivity::class.java)
                     startActivity(intent)
                 }
             })
@@ -105,7 +103,12 @@ class Enter : AppCompatActivity() {
     fun toNextActivity(view:View) {
         if (!saveEnterData()) {
             val intent = Intent(this, MyCatalog::class.java)
+            intent.putExtra("message", "user");
             startActivity(intent)
         }
+    }
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }

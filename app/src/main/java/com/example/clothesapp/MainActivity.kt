@@ -9,10 +9,6 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     fun toNextActivity(view:View)
     {
-            val intent = Intent(this, Enter::class.java)
+            val intent = Intent(this, EnterTwoTypes::class.java)
             startActivity(intent)
     }
 }

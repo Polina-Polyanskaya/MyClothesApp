@@ -27,13 +27,13 @@ class User {
         }
 
     fun equals(other: User): Boolean{
-        if(!this.login.equals(other.login))
-            return false
-        if(!this.phone.equals(other.phone))
-            return false
-        if(!this.email.equals(other.email))
-            return false
-        return true
+        if(this.login.equals(other.login))
+            return true
+        if(this.phone.equals(other.phone))
+            return true
+        if(this.email.equals(other.email))
+            return true
+        return false
     }
 
     constructor() {}
