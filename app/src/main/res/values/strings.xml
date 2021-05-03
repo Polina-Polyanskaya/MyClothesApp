@@ -9,4 +9,5 @@
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="toSave">Сохранить</string>
+    <string name="enterEmployees">Вход для сотрудников</string>
 </resources>
