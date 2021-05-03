@@ -7,7 +7,6 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
@@ -27,7 +26,6 @@ class MyCatalog : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_catalog)
         getSupportActionBar()?.hide()
-        println("4444444444444444444444")
         recyclerView=findViewById(R.id.recyclerView)
         layoutManager= LinearLayoutManager(this)
         recyclerView.layoutManager=layoutManager
@@ -93,6 +91,16 @@ class MyCatalog : AppCompatActivity() {
         builder.setPositiveButton(
             "Поиск"
         ) { dialog, which ->
+            var clearList=ArrayList<Page>()
+                for(item in list)
+                {
+                    var index=types.indexOf(item.type)
+                    if(checkedTypes.get(index))
+                        clearList.add(item)
+                }
+            recyclerViewAdapter=RecyclerViewAdapter(clearList,this@MyCatalog)
+            recyclerView.adapter=recyclerViewAdapter
+            recyclerViewAdapter.notifyDataSetChanged()
         }
         builder.setNeutralButton(
             "Отмена"
