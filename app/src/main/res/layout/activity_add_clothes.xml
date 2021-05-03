@@ -30,8 +30,8 @@
 
     <EditText
         android:id="@+id/comment"
-        android:layout_width="358dp"
-        android:layout_height="155dp"
+        android:layout_width="348dp"
+        android:layout_height="113dp"
         android:ems="10"
         android:hint="Комментарий"
         android:inputType="textMultiLine"
@@ -65,6 +65,6 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.581" />
+        app:layout_constraintVertical_bias="0.633" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

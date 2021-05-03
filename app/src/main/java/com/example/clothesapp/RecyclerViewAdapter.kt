@@ -58,7 +58,7 @@ class RecyclerViewAdapter:RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>
         var textView: TextView?=null
         init{
             imageView= itemView?.findViewById(R.id.imageInCatalog)
-            textView=itemView?.findViewById(R.id.typeInCatalog)
+            textView=itemView?.findViewById(R.id.commentInCatalog)
         }
 
     }
