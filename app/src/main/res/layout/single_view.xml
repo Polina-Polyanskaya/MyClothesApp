@@ -5,7 +5,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="30dp"
-    android:fastScrollEnabled="true">
+    android:fastScrollEnabled="true"
+    android:padding="15dp"
+    android:background="@color/teal_700">
 
     <Button
         android:id="@+id/deleteInCatalog"

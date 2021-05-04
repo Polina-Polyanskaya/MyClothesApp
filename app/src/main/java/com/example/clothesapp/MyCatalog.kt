@@ -15,6 +15,7 @@ import com.google.firebase.database.*
 class MyCatalog : AppCompatActivity() {
     private lateinit var menuButton: ImageButton
     private lateinit var plusButton: ImageButton
+    private lateinit var trashCanButton: ImageButton
     private var message: String = ""
     private lateinit var databaseReference: DatabaseReference
     private val list: ArrayList<Page> = ArrayList<Page>()
@@ -32,10 +33,11 @@ class MyCatalog : AppCompatActivity() {
         recyclerView.hasFixedSize()
         plusButton=findViewById(R.id.plus)
         val arguments = intent.extras
-        message=arguments?.get("message").toString()
-        if(message.equals("user"))
+        message = arguments?.get("message").toString()
+        if (message.equals("user"))
             plusButton.visibility = View.GONE
         menuButton = findViewById(R.id.imageButton)
+        trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         var query=databaseReference.child("photos")
         query.addListenerForSingleValueEvent(object :ValueEventListener
@@ -108,6 +110,13 @@ class MyCatalog : AppCompatActivity() {
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    fun deleteSort(view:View)
+    {
+        recyclerViewAdapter=RecyclerViewAdapter(list,this@MyCatalog)
+        recyclerView.adapter=recyclerViewAdapter
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     override fun onBackPressed() {
