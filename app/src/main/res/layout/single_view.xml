@@ -9,20 +9,21 @@
     android:padding="15dp"
     android:background="@color/teal_700">
 
-    <Button
+    <ImageButton
         android:id="@+id/deleteInCatalog"
-        android:layout_width="120dp"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="right"
         android:layout_marginBottom="5dp"
-        android:text="Удалить"/>
-    <Button
+        android:background="@drawable/cross" />
+
+    <ImageButton
         android:id="@+id/addInCatalog"
-        android:layout_width="120dp"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="right"
         android:layout_marginBottom="25dp"
-        android:text="Нравится"/>
+        android:background="@drawable/like"/>
 
     <ImageView
         android:id="@+id/imageInCatalog"
