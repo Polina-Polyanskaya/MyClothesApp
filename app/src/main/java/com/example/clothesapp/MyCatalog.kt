@@ -1,18 +1,19 @@
 package com.example.clothesapp
 
 import android.content.Intent
+import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 
-
-class MyCatalog : AppCompatActivity() {
+class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     private lateinit var menuButton: ImageButton
     private lateinit var plusButton: ImageButton
     private lateinit var trashCanButton: ImageButton
@@ -21,17 +22,19 @@ class MyCatalog : AppCompatActivity() {
     private val list: ArrayList<Page> = ArrayList<Page>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager:RecyclerView.LayoutManager
-    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
+    private lateinit var likedClothes:ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_catalog)
         getSupportActionBar()?.hide()
-        recyclerView=findViewById(R.id.recyclerView)
-        layoutManager= LinearLayoutManager(this)
-        recyclerView.layoutManager=layoutManager
+        recyclerView = findViewById(R.id.recyclerViewInCatalog)
+        layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
         recyclerView.hasFixedSize()
-        plusButton=findViewById(R.id.plus)
+        plusButton = findViewById(R.id.plus)
+        likedClothes = findViewById(R.id.LikedClothes)
         val arguments = intent.extras
         message = arguments?.get("message").toString()
         if (message.equals("user"))
@@ -39,9 +42,8 @@ class MyCatalog : AppCompatActivity() {
         menuButton = findViewById(R.id.imageButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        var query=databaseReference.child("photos")
-        query.addListenerForSingleValueEvent(object :ValueEventListener
-        {
+        var query = databaseReference.child("photos")
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 val text = "Проблемы с подключением к базе данных при чтении."
                 val duration = Toast.LENGTH_SHORT
@@ -55,9 +57,13 @@ class MyCatalog : AppCompatActivity() {
                 for (ds in snapshot.children) {
                     list.add(ds.getValue(Page::class.java)!!)
                 }
-                recyclerViewAdapter=RecyclerViewAdapter(list,this@MyCatalog)
-                recyclerView.adapter=recyclerViewAdapter
-                recyclerViewAdapter.notifyDataSetChanged()
+                recyclerViewAdapterCatalog =
+                    RecyclerViewAdapterCatalog(list, this@MyCatalog, R.layout.single_view)
+                recyclerView.adapter = recyclerViewAdapterCatalog
+                recyclerViewAdapterCatalog.notifyDataSetChanged()
+                var simpleCallback: ItemTouchHelper.SimpleCallback =
+                    SwipeController(0, LEFT, this@MyCatalog)
+                ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView)
             }
         })
     }
@@ -100,9 +106,9 @@ class MyCatalog : AppCompatActivity() {
                     if(checkedTypes.get(index))
                         clearList.add(item)
                 }
-            recyclerViewAdapter=RecyclerViewAdapter(clearList,this@MyCatalog)
-            recyclerView.adapter=recyclerViewAdapter
-            recyclerViewAdapter.notifyDataSetChanged()
+            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(clearList,this@MyCatalog,R.layout.single_view)
+            recyclerView.adapter=recyclerViewAdapterCatalog
+            recyclerViewAdapterCatalog.notifyDataSetChanged()
         }
         builder.setNeutralButton(
             "Отмена"
@@ -114,13 +120,27 @@ class MyCatalog : AppCompatActivity() {
 
     fun deleteSort(view:View)
     {
-        recyclerViewAdapter=RecyclerViewAdapter(list,this@MyCatalog)
-        recyclerView.adapter=recyclerViewAdapter
-        recyclerViewAdapter.notifyDataSetChanged()
+        val intent = Intent(this@MyCatalog, MyCatalog::class.java)
+        startActivity(intent)
+    }
+
+    fun toLikedClothes(view: View)
+    {
+
     }
 
     override fun onBackPressed() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
+
+    override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+        if (viewHolder is RecyclerViewAdapterCatalog.MyViewHolder) {
+            if(message.equals("user"))
+                recyclerViewAdapterCatalog.likeItem(position)
+            else
+                recyclerViewAdapterCatalog.removeItem(position)
+        }
+    }
 }
+

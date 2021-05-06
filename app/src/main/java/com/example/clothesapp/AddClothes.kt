@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.os.SystemClock.sleep
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
@@ -65,50 +67,52 @@ class AddClothes : AppCompatActivity() {
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
     }
-    fun addPage(view:View) {
-          val progressDialog = ProgressDialog(this)
-          if (wasAdded) {
-                  progressDialog.setTitle("Uploading")
-                  progressDialog.show()
-                  var ref = storageReference?.child(path)
-                  ref?.putFile(filePath)
-                      ?.addOnProgressListener { task ->
-                          val progress =
-                              100.0 * task.bytesTransferred / task.totalByteCount
-                          progressDialog.setMessage("Uploaded " + progress.toInt() + "%...")
-                      }
-                      ?.addOnSuccessListener { taskSnapshot ->
-                          progressDialog.dismiss()
-                          val text = "Загрузилась."
-                          val duration = Toast.LENGTH_SHORT
-                          val toast = Toast.makeText(this@AddClothes, text, duration)
-                          toast.show()
-                      }
-                      ?.addOnFailureListener {
-                          progressDialog.dismiss()
-                          val text = "Проблемы с записью в базу данных."
-                          val duration = Toast.LENGTH_SHORT
-                          val toast = Toast.makeText(this@AddClothes, text, duration)
-                          toast.show()
-                          val intent = Intent(this@AddClothes, MainActivity::class.java)
-                          startActivity(intent)
-                      }
-              comment = commentField.text.toString()
-              val page = Page(path, typeOfClothes, comment)
-              databaseReference.child("photos").push().setValue(page).addOnFailureListener {
-                  val text = "Проблемы с записью в базу данных."
-                  val duration = Toast.LENGTH_SHORT
-                  val toast = Toast.makeText(this@AddClothes, text, duration)
-                  toast.show()
-                  val intent = Intent(this@AddClothes, MainActivity::class.java)
-                  startActivity(intent)
-              }
-              val intent = Intent(this@AddClothes, MyCatalog::class.java)
-              intent.putExtra("message", "employee");
-              startActivity(intent)
-          } else {
-              Toast.makeText(this, "Фотография не была добавлена", Toast.LENGTH_SHORT).show()
-          }
+    fun addPage(view: View) {
+        val progressDialog = ProgressDialog(this)
+        var progressBar=ProgressBar(this)
+        if (wasAdded) {
+            progressDialog.setTitle("Uploading")
+            progressDialog.show()
+            var ref = storageReference?.child(path)
+            ref?.putFile(filePath)
+                ?.addOnProgressListener { task ->
+                    val progress =
+                        100.0 * task.bytesTransferred / task.totalByteCount
+                    progressBar.setProgress(progress.toInt(),true)
+                }
+                ?.addOnSuccessListener { taskSnapshot ->
+                    progressDialog.dismiss()
+                    val text = "Загрузилась."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@AddClothes, text, duration)
+                    toast.show()
+                }
+                ?.addOnFailureListener {
+                    progressDialog.dismiss()
+                    val text = "Проблемы с записью в базу данных."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(this@AddClothes, text, duration)
+                    toast.show()
+                    val intent = Intent(this@AddClothes, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            comment = commentField.text.toString()
+            val page = Page(path, typeOfClothes, comment)
+            databaseReference.child("photos").push().setValue(page).addOnFailureListener {
+                val text = "Проблемы с записью в базу данных."
+                val duration = Toast.LENGTH_SHORT
+                val toast = Toast.makeText(this@AddClothes, text, duration)
+                toast.show()
+                val intent = Intent(this@AddClothes, MainActivity::class.java)
+                startActivity(intent)
+            }
+            sleep(1500)
+            val intent = Intent(this@AddClothes, MyCatalog::class.java)
+            intent.putExtra("message", "employee");
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "Фотография не была добавлена", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun addPhoto(view: View) {
