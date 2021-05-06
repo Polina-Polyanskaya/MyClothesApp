@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="30dp"
+    android:layout_margin="20dp"
     android:fastScrollEnabled="true"
     android:padding="15dp"
     android:background="@color/teal_700">
 
     <ImageView
         android:id="@+id/imageInCatalog"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="340dp"
+        android:layout_height="340dp"
         android:layout_gravity="center"
-        android:scaleType="center"
         android:layout_marginBottom="25dp"
-        tools:srcCompat="@drawable/ic_launcher_background" />
+        tools:srcCompat="@drawable/ic_launcher_background"
+        android:scaleType="fitXY"/>
     
     <TextView
         android:layout_width="wrap_content"

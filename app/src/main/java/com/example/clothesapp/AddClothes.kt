@@ -8,8 +8,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
-import android.os.SystemClock.sleep
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
@@ -67,11 +65,12 @@ class AddClothes : AppCompatActivity() {
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
     }
+
     fun addPage(view: View) {
         val progressDialog = ProgressDialog(this)
         var progressBar=ProgressBar(this)
         if (wasAdded) {
-            progressDialog.setTitle("Uploading")
+            progressDialog.setTitle("Грузится")
             progressDialog.show()
             var ref = storageReference?.child(path)
             ref?.putFile(filePath)
@@ -86,6 +85,9 @@ class AddClothes : AppCompatActivity() {
                     val duration = Toast.LENGTH_SHORT
                     val toast = Toast.makeText(this@AddClothes, text, duration)
                     toast.show()
+                    val intent = Intent(this@AddClothes, MyCatalog::class.java)
+                    intent.putExtra("message", "newPhoto")
+                    startActivity(intent)
                 }
                 ?.addOnFailureListener {
                     progressDialog.dismiss()
@@ -106,10 +108,6 @@ class AddClothes : AppCompatActivity() {
                 val intent = Intent(this@AddClothes, MainActivity::class.java)
                 startActivity(intent)
             }
-            sleep(1500)
-            val intent = Intent(this@AddClothes, MyCatalog::class.java)
-            intent.putExtra("message", "employee");
-            startActivity(intent)
         } else {
             Toast.makeText(this, "Фотография не была добавлена", Toast.LENGTH_SHORT).show()
         }

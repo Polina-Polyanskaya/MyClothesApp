@@ -3,6 +3,7 @@ package com.example.clothesapp
 import android.content.Intent
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -39,6 +40,8 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
         message = arguments?.get("message").toString()
         if (message.equals("user"))
             plusButton.visibility = View.GONE
+      //  if(message.equals("newPhoto"))
+        //    SystemClock.sleep(5000)
         menuButton = findViewById(R.id.imageButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")

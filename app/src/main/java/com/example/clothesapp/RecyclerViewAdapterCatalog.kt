@@ -2,24 +2,18 @@ package com.example.clothesapp
 
 import android.content.Context
 import android.content.Intent
-import android.icu.lang.UCharacter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.bumptech.glide.Glide
 import com.example.clothesapp.db.myDbManager
 import com.google.firebase.database.*
-import android.app.Activity
-import android.os.SystemClock
-import androidx.core.content.ContextCompat.startActivity
-import com.squareup.picasso.Picasso
 
 class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog.MyViewHolder> {
 
@@ -58,9 +52,9 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
         storageReference?.child(arr.get(position).path!!)
             ?.downloadUrl
             ?.addOnSuccessListener { Uri ->
-                Picasso.with(context).load(Uri)
-                    .into(holder?.imageView)
-
+                holder?.imageView?.let { Glide.with(context).load(Uri.toString()).into(it) }
+            }
+            ?.addOnFailureListener {
             }
     }
 
@@ -79,8 +73,8 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
                 val duration = Toast.LENGTH_SHORT
                 val toast = Toast.makeText(context, text, duration)
                 toast.show()
-               // val intent = Intent(context, MainActivity::class.java)
-               //  startActivity(intent)
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
