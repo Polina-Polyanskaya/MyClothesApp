@@ -9,34 +9,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.bumptech.glide.Glide
 import com.example.clothesapp.db.myDbManager
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog.MyViewHolder> {
 
     var arr=ArrayList<Page>()
     lateinit var context:Context
-    var view:Int=0
+    var view: Int = 0
     private lateinit var databaseReference: DatabaseReference
-    private var storageReference: StorageReference?=null
+    private var storageReference: StorageReference? = null
+    private var typeOfUser = ""
 
     constructor() {}
     constructor(
+        _typeOfUser:String,
         _arr: ArrayList<Page>,
         _context: Context,
         _view: Int
 
     ) {
+        typeOfUser=_typeOfUser
         arr = _arr
         context = _context
         view = _view
     }
 
+    private var time: Long = 0
+    private var isFirstTime=true
+    private lateinit var viewToHolder: View
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder{
         var view=LayoutInflater.from(parent.context).inflate(view,parent,false)
+        viewToHolder=view
         var myViewHolder=MyViewHolder(view)
         return myViewHolder
     }
@@ -46,6 +54,30 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        if(typeOfUser.equals("user")) {
+            viewToHolder.setOnClickListener {
+                if (isFirstTime) {
+                    time = System.currentTimeMillis()
+                    isFirstTime = false
+                } else {
+                    if (time + 500 > System.currentTimeMillis()) {
+                        val path = arr.get(position).path!!
+                        val comment = arr.get(position).comment!!
+                        var manager = myDbManager(context)
+                        manager.openDb()
+                        var checker = true
+                        for (i in manager.readDbData()) {
+                            if (i.path.equals(path))
+                                checker = false
+                        }
+                        if (checker) {
+                            manager.insertToDb(path, comment)
+                        }
+                    }
+                    time = System.currentTimeMillis()
+                }
+            }
+        }
         holder.textView?.setText(arr.get(position).comment)
         storageReference =
             FirebaseStorage.getInstance().getReferenceFromUrl("gs://myproject-df142.appspot.com")
@@ -87,21 +119,6 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
                 }
             }
         })
-    }
-
-    fun likeItem(position: Int)
-    {
-        var manager=myDbManager(context)
-        var checker=true
-        val path=arr.get(position).path!!
-        val comment=arr.get(position).comment!!
-        for (i in manager.readDbData())
-        {
-            if (i.path.equals(path))
-                checker = false
-        }
-        if (checker)
-            manager.insertToDb(path, comment)
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

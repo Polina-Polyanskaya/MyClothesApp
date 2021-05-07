@@ -23,7 +23,8 @@ class LikedClothes : AppCompatActivity() {
         recyclerView.layoutManager=layoutManager
         recyclerView.hasFixedSize()
         manager=myDbManager(this)
-        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(manager.readDbData(),this@LikedClothes,R.layout.single_view)
+        manager.openDb()
+        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog("user",manager.readDbData(),this@LikedClothes,R.layout.single_view)
         recyclerView.adapter=recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
     }
@@ -32,5 +33,10 @@ class LikedClothes : AppCompatActivity() {
         val intent = Intent(this, MyCatalog::class.java)
         intent.putExtra("message", "user")
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        manager.closeDb()
     }
 }

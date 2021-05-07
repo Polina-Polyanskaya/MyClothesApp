@@ -14,6 +14,4 @@ object DataBaseInfo:BaseColumns {
                 "$COLUMN_ITEM_COMMENT TEXT)"
 
     const val DELETE_TABLE="DROP TABLE IF EXISTS $TABLE_NAME"
-
-
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -61,12 +62,15 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                     list.add(ds.getValue(Page::class.java)!!)
                 }
                 recyclerViewAdapterCatalog =
-                    RecyclerViewAdapterCatalog(list, this@MyCatalog, R.layout.single_view)
+                    RecyclerViewAdapterCatalog(message,list, this@MyCatalog, R.layout.single_view)
                 recyclerView.adapter = recyclerViewAdapterCatalog
                 recyclerViewAdapterCatalog.notifyDataSetChanged()
-                var simpleCallback: ItemTouchHelper.SimpleCallback =
-                    SwipeController(0, LEFT, this@MyCatalog)
-                ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView)
+                if(message.equals("employee")) {
+                    var simpleCallback: ItemTouchHelper.SimpleCallback =
+                        SwipeController(0, LEFT, this@MyCatalog)
+                    ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView)
+                }
+
             }
         })
     }
@@ -109,7 +113,7 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                     if(checkedTypes.get(index))
                         clearList.add(item)
                 }
-            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(clearList,this@MyCatalog,R.layout.single_view)
+            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(message,clearList,this@MyCatalog,R.layout.single_view)
             recyclerView.adapter=recyclerViewAdapterCatalog
             recyclerViewAdapterCatalog.notifyDataSetChanged()
         }
@@ -141,9 +145,6 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
 
     override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         if (viewHolder is RecyclerViewAdapterCatalog.MyViewHolder) {
-            if(message.equals("user"))
-                recyclerViewAdapterCatalog.likeItem(position)
-            else
                 recyclerViewAdapterCatalog.removeItem(position)
         }
     }

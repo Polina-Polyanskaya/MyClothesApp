@@ -3,16 +3,11 @@ package com.example.clothesapp.db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.clothesapp.Page
 
-class myDbHelper(_context: Context) : SQLiteOpenHelper(
-    _context, DATABASE_NAME,null, DATABASE_VERSION
+class myDbHelper(context: Context) : SQLiteOpenHelper(
+    context, DATABASE_NAME, null, DATABASE_VERSION
 ) {
-
-    lateinit var context:Context
-
-    init{
-        context=_context
-    }
     companion object
     {
         const val DATABASE_NAME="myDb.db"
