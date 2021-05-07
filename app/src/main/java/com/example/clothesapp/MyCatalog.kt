@@ -40,8 +40,8 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
         message = arguments?.get("message").toString()
         if (message.equals("user"))
             plusButton.visibility = View.GONE
-      //  if(message.equals("newPhoto"))
-        //    SystemClock.sleep(5000)
+        else
+            likedClothes.visibility=View.GONE
         menuButton = findViewById(R.id.imageButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
@@ -124,12 +124,14 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     fun deleteSort(view:View)
     {
         val intent = Intent(this@MyCatalog, MyCatalog::class.java)
+        intent.putExtra("message", "employee")
         startActivity(intent)
     }
 
     fun toLikedClothes(view: View)
     {
-
+        val intent = Intent(this@MyCatalog, LikedClothes::class.java)
+        startActivity(intent)
     }
 
     override fun onBackPressed() {

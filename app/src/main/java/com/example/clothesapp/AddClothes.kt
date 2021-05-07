@@ -97,7 +97,7 @@ class AddClothes : AppCompatActivity() {
                     val toast = Toast.makeText(this@AddClothes, text, duration)
                     toast.show()
                     val intent = Intent(this@AddClothes, MyCatalog::class.java)
-                    intent.putExtra("message", "newPhoto")
+                    intent.putExtra("message", "employee")
                     startActivity(intent)
                 }
                 ?.addOnFailureListener {
@@ -148,7 +148,7 @@ class AddClothes : AppCompatActivity() {
                     pickImageFromGallery()
                 }
                 else{
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Доступ запрещен", Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.clothesapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +23,14 @@ class LikedClothes : AppCompatActivity() {
         recyclerView.layoutManager=layoutManager
         recyclerView.hasFixedSize()
         manager=myDbManager(this)
-        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(manager.readDbData(),this@LikedClothes,R.layout.one_liked_photo)
+        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(manager.readDbData(),this@LikedClothes,R.layout.single_view)
         recyclerView.adapter=recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, MyCatalog::class.java)
+        intent.putExtra("message", "user")
+        startActivity(intent)
     }
 }
