@@ -31,6 +31,7 @@ class AddClothes : AppCompatActivity() {
     private var storageReference: StorageReference?=null
     private var comment: String = ""
     private lateinit var commentField:EditText
+    val path: String = "photos/" + UUID.randomUUID().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +71,16 @@ class AddClothes : AppCompatActivity() {
         val progressDialog = ProgressDialog(this)
         var progressBar=ProgressBar(this)
         if (wasAdded) {
+            comment = commentField.text.toString()
+            val page = Page(path, typeOfClothes, comment)
+            databaseReference.child("photos").push().setValue(page).addOnFailureListener {
+                val text = "Проблемы с записью в базу данных."
+                val duration = Toast.LENGTH_SHORT
+                val toast = Toast.makeText(this@AddClothes, text, duration)
+                toast.show()
+                val intent = Intent(this@AddClothes, MainActivity::class.java)
+                startActivity(intent)
+            }
             progressDialog.setTitle("Грузится")
             progressDialog.show()
             var ref = storageReference?.child(path)
@@ -98,16 +109,6 @@ class AddClothes : AppCompatActivity() {
                     val intent = Intent(this@AddClothes, MainActivity::class.java)
                     startActivity(intent)
                 }
-            comment = commentField.text.toString()
-            val page = Page(path, typeOfClothes, comment)
-            databaseReference.child("photos").push().setValue(page).addOnFailureListener {
-                val text = "Проблемы с записью в базу данных."
-                val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(this@AddClothes, text, duration)
-                toast.show()
-                val intent = Intent(this@AddClothes, MainActivity::class.java)
-                startActivity(intent)
-            }
         } else {
             Toast.makeText(this, "Фотография не была добавлена", Toast.LENGTH_SHORT).show()
         }
@@ -152,8 +153,6 @@ class AddClothes : AppCompatActivity() {
             }
         }
     }
-
-    val path: String = "photos/" + UUID.randomUUID().toString()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
