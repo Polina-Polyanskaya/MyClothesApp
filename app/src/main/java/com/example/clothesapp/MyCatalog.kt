@@ -70,7 +70,6 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                         SwipeController(0, LEFT, this@MyCatalog)
                     ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView)
                 }
-
             }
         })
     }
@@ -128,7 +127,7 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     fun deleteSort(view:View)
     {
         val intent = Intent(this@MyCatalog, MyCatalog::class.java)
-        intent.putExtra("message", "employee")
+        intent.putExtra("message", message)
         startActivity(intent)
     }
 

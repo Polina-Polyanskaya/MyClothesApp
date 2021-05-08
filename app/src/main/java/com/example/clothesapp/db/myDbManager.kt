@@ -3,6 +3,7 @@ package com.example.clothesapp.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.provider.BaseColumns
 import com.example.clothesapp.Page
 
 class myDbManager(val context:Context) {
@@ -46,6 +47,11 @@ class myDbManager(val context:Context) {
     fun clearDbData()
     {
         db?.delete(DataBaseInfo.TABLE_NAME,null,null)
+    }
+
+    fun deleteString(strForSearch:String)
+    {
+        db?.delete(DataBaseInfo.TABLE_NAME,"${DataBaseInfo.COLUMN_ITEM_PATH} = ?", arrayOf(strForSearch))
     }
 
     fun closeDb() {

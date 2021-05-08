@@ -61,6 +61,7 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
                     isFirstTime = false
                 } else {
                     if (time + 500 > System.currentTimeMillis()) {
+                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_SHORT).show()
                         val path = arr.get(position).path!!
                         val comment = arr.get(position).comment!!
                         var manager = myDbManager(context)
@@ -96,29 +97,36 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
         val comment=arr.get(position).comment!!
         arr.removeAt(position)
         notifyItemRemoved(position)
-        databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        var query=databaseReference.child("photos")
-        query.addListenerForSingleValueEvent(object : ValueEventListener
-        {
-            override fun onCancelled(error: DatabaseError) {
-                val text = "Проблемы с подключением к базе данных при чтении."
-                val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(context, text, duration)
-                toast.show()
-                val intent = Intent(context, MainActivity::class.java)
-                context.startActivity(intent)
-            }
+        if(typeOfUser.equals("employee")) {
+            databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
+            var query = databaseReference.child("photos")
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    val text = "Проблемы с подключением к базе данных при чтении."
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(context, text, duration)
+                    toast.show()
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    var page=ds.getValue(Page::class.java)!!
-                    if (page.path.equals(path)) {
-                        ds.ref.removeValue()
-                        break
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        var page = ds.getValue(Page::class.java)!!
+                        if (page.path.equals(path)) {
+                            ds.ref.removeValue()
+                            break
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+        else
+        {
+            var manager = myDbManager(context)
+            manager.openDb()
+            manager.deleteString(path)
+            manager.closeDb()        }
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
