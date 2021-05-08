@@ -62,7 +62,8 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                     list.add(ds.getValue(Page::class.java)!!)
                 }
                 recyclerViewAdapterCatalog =
-                    RecyclerViewAdapterCatalog(message,list, this@MyCatalog, R.layout.single_view)
+                    RecyclerViewAdapterCatalog(message,list, this@MyCatalog, R.layout.single_view,
+                        arrayListOf())
                 recyclerView.adapter = recyclerViewAdapterCatalog
                 recyclerViewAdapterCatalog.notifyDataSetChanged()
                 if(message.equals("employee")) {
@@ -112,7 +113,7 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                     if(checkedTypes.get(index))
                         clearList.add(item)
                 }
-            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(message,clearList,this@MyCatalog,R.layout.single_view)
+            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(message,clearList,this@MyCatalog,R.layout.single_view,list)
             recyclerView.adapter=recyclerViewAdapterCatalog
             recyclerViewAdapterCatalog.notifyDataSetChanged()
         }

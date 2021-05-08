@@ -19,7 +19,6 @@
         android:layout_height="50dp"
         android:layout_gravity="right"
         android:layout_marginBottom="28dp"
-        android:layout_marginTop="12dp"
         android:background="@drawable/home"
         android:onClick="toCatalog"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewInLikedClothes"

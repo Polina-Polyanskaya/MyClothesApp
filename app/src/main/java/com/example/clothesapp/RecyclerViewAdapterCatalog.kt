@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog.MyViewHolder> {
 
     var arr=ArrayList<Page>()
+    var arr_2=ArrayList<Page>()
     lateinit var context:Context
     var view: Int = 0
     private lateinit var databaseReference: DatabaseReference
@@ -29,13 +30,15 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
         _typeOfUser:String,
         _arr: ArrayList<Page>,
         _context: Context,
-        _view: Int
+        _view: Int,
+        _arr2: ArrayList<Page>
 
     ) {
-        typeOfUser=_typeOfUser
+        typeOfUser = _typeOfUser
         arr = _arr
         context = _context
         view = _view
+        arr_2 = _arr2
     }
 
     private var time: Long = 0
@@ -120,13 +123,26 @@ class RecyclerViewAdapterCatalog:RecyclerView.Adapter<RecyclerViewAdapterCatalog
                     }
                 }
             })
-        }
-        else
-        {
+            if(arr_2.size!=0) {
+                var counter = -1
+                var checker = false
+                for (i in arr_2) {
+                    counter++
+                    if (i.path.equals(path)) {
+                        checker = true
+                        break
+                    }
+                }
+                if (checker)
+                    arr_2.removeAt(counter)
+            }
+
+        } else {
             var manager = myDbManager(context)
             manager.openDb()
             manager.deleteString(path)
-            manager.closeDb()        }
+            manager.closeDb()
+        }
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

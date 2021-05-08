@@ -50,7 +50,8 @@ class LikedClothes : AppCompatActivity(),SwipeController.SwipeControllerListener
                     list.add(ds.getValue(Page::class.java)!!)
             }
         })
-        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog("notUser",listOfPages,this@LikedClothes,R.layout.single_view)
+        recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog("notUser",listOfPages,this@LikedClothes,R.layout.single_view,
+            arrayListOf())
         recyclerView.adapter=recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
         var simpleCallback: ItemTouchHelper.SimpleCallback =
@@ -88,7 +89,8 @@ class LikedClothes : AppCompatActivity(),SwipeController.SwipeControllerListener
         listOfPages = manager.readDbData()
         println("AAA " + listOfPages.size)
         recyclerViewAdapterCatalog =
-            RecyclerViewAdapterCatalog("notUser", listOfPages, this@LikedClothes, R.layout.single_view)
+            RecyclerViewAdapterCatalog("notUser", listOfPages, this@LikedClothes, R.layout.single_view,
+                arrayListOf())
         recyclerView.adapter = recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
     }
