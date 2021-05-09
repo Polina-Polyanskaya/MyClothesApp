@@ -8,6 +8,20 @@
     tools:context=".MyCatalog">
 
     <ImageButton
+        android:id="@+id/infoButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        android:background="@drawable/info"
+        android:onClick="showInfo"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewInCatalog"
+        app:layout_constraintEnd_toStartOf="@+id/trashCanButton"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.355" />
+
+    <ImageButton
         android:id="@+id/LikedClothes"
         android:layout_width="50dp"
         android:layout_height="50dp"

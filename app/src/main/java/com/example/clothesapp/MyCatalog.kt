@@ -3,13 +3,12 @@ package com.example.clothesapp
 import android.content.Intent
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.os.Bundle
-import android.os.SystemClock
-import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +19,14 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     private lateinit var plusButton: ImageButton
     private lateinit var trashCanButton: ImageButton
     private var message: String = ""
+    private lateinit var infoButton:ImageButton
     private lateinit var databaseReference: DatabaseReference
     private val list: ArrayList<Page> = ArrayList<Page>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager:RecyclerView.LayoutManager
     private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
     private lateinit var likedClothes:ImageButton
+    private lateinit var dialog: DialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +37,7 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
         recyclerView.layoutManager = layoutManager
         recyclerView.hasFixedSize()
         plusButton = findViewById(R.id.plus)
+        infoButton=findViewById(R.id.infoButton)
         likedClothes = findViewById(R.id.LikedClothes)
         val arguments = intent.extras
         message = arguments?.get("message").toString()
@@ -136,6 +138,11 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     {
         val intent = Intent(this@MyCatalog, LikedClothes::class.java)
         startActivity(intent)
+    }
+
+    fun showInfo(view: View) {
+        dialog=InfoDialog()
+        dialog.show(supportFragmentManager,"custom")
     }
 
     override fun onBackPressed() {
