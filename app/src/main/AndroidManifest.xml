@@ -20,14 +20,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClothesApp">
-        <activity android:name=".LikedClothes"></activity>
-        <activity android:name=".AddClothes" />
-        <activity android:name=".EnterEmployee" />
-        <activity android:name=".EnterTwoTypes" />
-        <activity android:name=".MyCatalog" />
-        <activity android:name=".Registration" />
-        <activity android:name=".EnterUsers" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.LikedClothes"></activity>
+        <activity android:name=".activities.AddClothes" />
+        <activity android:name=".activities.EnterEmployee" />
+        <activity android:name=".activities.EnterTwoTypes" />
+        <activity android:name=".activities.MyCatalog" />
+        <activity android:name=".activities.Registration" />
+        <activity android:name=".activities.EnterUsers" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

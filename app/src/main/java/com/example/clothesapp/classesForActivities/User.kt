@@ -1,7 +1,6 @@
-package com.example.clothesapp
+package com.example.clothesapp.classesForActivities
 
 import com.google.firebase.database.IgnoreExtraProperties
-import java.util.*
 
 @IgnoreExtraProperties
 class User {
@@ -26,12 +25,12 @@ class User {
             field = value
         }
 
-    fun equals(other: User): Boolean{
-        if(this.login.equals(other.login))
+    fun equals(other: User): Boolean {
+        if (this.login.equals(other.login))
             return true
-        if(this.phone.equals(other.phone))
+        if (this.phone.equals(other.phone))
             return true
-        if(this.email.equals(other.email))
+        if (this.email.equals(other.email))
             return true
         return false
     }
@@ -48,5 +47,4 @@ class User {
         email = _email
         password = _password
     }
-
 }

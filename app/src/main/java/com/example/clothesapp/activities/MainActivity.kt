@@ -1,6 +1,7 @@
-package com.example.clothesapp
+package com.example.clothesapp.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -9,6 +10,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.clothesapp.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,8 +20,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textAboutReg)
-        getSupportActionBar()?.hide();
-        val str: String = getResources().getString(R.string.toReg)
+        supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        val str: String = resources.getString(R.string.toReg)
         val spannableString = SpannableString(str)
         val clickableSpan = object : ClickableSpan() {
 

@@ -1,7 +1,6 @@
-package com.example.clothesapp
+package com.example.clothesapp.classesForActivities
 
 import com.google.firebase.database.IgnoreExtraProperties
-import java.util.*
 
 @IgnoreExtraProperties
 class Page {
@@ -33,5 +32,4 @@ class Page {
         type = _type
         comment = _comment
     }
-
 }

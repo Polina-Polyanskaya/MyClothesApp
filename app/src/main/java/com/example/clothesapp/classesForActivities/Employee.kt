@@ -1,7 +1,6 @@
-package com.example.clothesapp
+package com.example.clothesapp.classesForActivities
 
 import com.google.firebase.database.IgnoreExtraProperties
-import java.util.*
 
 @IgnoreExtraProperties
 class Employee {

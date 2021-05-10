@@ -3,13 +3,12 @@ package com.example.clothesapp.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.provider.BaseColumns
-import com.example.clothesapp.Page
+import com.example.clothesapp.classesForActivities.Page
 
-class myDbManager(val context:Context) {
+class MyDbManager(val context: Context) {
 
-    val myDbHelper = myDbHelper(context)
-    var db: SQLiteDatabase? = null
+    private val myDbHelper = MyDbHelper(context)
+    private var db: SQLiteDatabase? = null
 
     fun openDb() {
         db = myDbHelper.writableDatabase
@@ -37,21 +36,25 @@ class myDbManager(val context:Context) {
                 val path = cursor?.getString(cursor.getColumnIndex(DataBaseInfo.COLUMN_ITEM_PATH))
                 val comment =
                     cursor?.getString(cursor.getColumnIndex(DataBaseInfo.COLUMN_ITEM_COMMENT))
-                dataList.add(Page(path, "", comment))
+                dataList.add(
+                    Page(
+                        path,
+                        "",
+                        comment
+                    )
+                )
             }
         }
         cursor?.close()
         return dataList
     }
 
-    fun clearDbData()
-    {
-        db?.delete(DataBaseInfo.TABLE_NAME,null,null)
-    }
-
-    fun deleteString(strForSearch:String)
-    {
-        db?.delete(DataBaseInfo.TABLE_NAME,"${DataBaseInfo.COLUMN_ITEM_PATH} = ?", arrayOf(strForSearch))
+    fun deleteString(strForSearch: String) {
+        db?.delete(
+            DataBaseInfo.TABLE_NAME,
+            "${DataBaseInfo.COLUMN_ITEM_PATH} = ?",
+            arrayOf(strForSearch)
+        )
     }
 
     fun closeDb() {

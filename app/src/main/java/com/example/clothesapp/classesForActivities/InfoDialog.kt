@@ -1,15 +1,11 @@
-package com.example.clothesapp
+package com.example.clothesapp.classesForActivities
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-
+import com.example.clothesapp.R
 
 class InfoDialog : DialogFragment() {
     override fun onCreateView(

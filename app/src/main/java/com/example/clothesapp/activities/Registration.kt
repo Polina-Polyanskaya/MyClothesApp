@@ -1,6 +1,7 @@
-package com.example.clothesapp
+package com.example.clothesapp.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.Selection
@@ -10,9 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.clothesapp.R
+import com.example.clothesapp.classesForActivities.Errors
+import com.example.clothesapp.classesForActivities.User
 import com.google.firebase.database.*
-import java.util.regex.Pattern
-
 
 class Registration : AppCompatActivity() {
 
@@ -24,14 +26,15 @@ class Registration : AppCompatActivity() {
     private lateinit var databaseReference: DatabaseReference
     private var isFirstTime = true
     private lateinit var list: ArrayList<User>
-    var hasReadError = false
-    var isUnique = false
-    lateinit var newUser: User
+    private var hasReadError = false
+    private var isUnique = false
+    private lateinit var newUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-        getSupportActionBar()?.hide()
+        supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         login = findViewById(R.id.Login)
         phone = findViewById(R.id.TelephoneEdit)
@@ -45,7 +48,7 @@ class Registration : AppCompatActivity() {
                         isFirstTime = false
                     } else
                         phone.setText("+79")
-                    Selection.setSelection(phone.getText(), phone.getText().length)
+                    Selection.setSelection(phone.text, phone.text.length)
                 }
             }
 
@@ -60,7 +63,7 @@ class Registration : AppCompatActivity() {
             }
         })
         registrationButton = findViewById(R.id.SaveButton)
-        list = ArrayList<User>()
+        list = ArrayList()
         databaseReference
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -71,79 +74,51 @@ class Registration : AppCompatActivity() {
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     hasReadError = true
-                    val text = "Проблемы с подключением к базе данных при чтении."
-                    val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@Registration, text, duration)
-                    toast.show()
+                    Toast.makeText(this@Registration, "Проблемы с подключением к базе данных при чтении.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@Registration, MainActivity::class.java)
                     startActivity(intent)
                 }
             })
     }
 
-    fun hasAnyErrors(
-        fieldLogin: String,
-        fieldPhone: String,
-        fieldEmail: String,
-        fieldPassword: String
-    ): Boolean {
-        //логин
-        if (fieldLogin.isEmpty()) {
-            login.error = "Логин не может быть пустым."
-            return true
-        }
-        if (!(fieldLogin.length >= 5 && fieldLogin.length <= 15)) {
-            login.error = "Логин не может быть длиной меньше 5 или больше 15"
-            return true
-        }
-        if (!Pattern.compile("^[_A-z0-9]+$").matcher(fieldLogin).matches()) {
-            login.error =
-                "Логин может содержать только символы латницы, цифры и нижнее подчеркивание."
-            return true
-        }
-        //телефон
-        if (fieldPhone.length != 12) {
-            phone.error = "Номер телефона не может быть длиной не равной 12."
-            return true
-        }
-        if (!Pattern.compile("^[0-9]+$").matcher(fieldPhone.substring(3)).matches()) {
-            phone.error = "Номер телефона может содержать только цифры и один плюс в начале."
-            return true
-        }
-        //почта
-        if (fieldEmail.isEmpty()) {
-            email.error = "Почта не может быть пустой."
-            return true
-        }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(fieldEmail).matches()) {
-            email.error = "Это не адрес электронной почты."
-            return true
-        }
-        //пароль
-        if (fieldPassword.isEmpty()) {
-            password.error = "Пароль не может быть пустым."
-            return true
-        }
-        if (!(fieldPassword.length >= 8 && fieldPassword.length <= 15)) {
-            password.error = "Пароль не может быть длиной меньше 8 или больше 15."
-            return true
-        }
-        if (!Pattern.compile("^[_A-z0-9]+$").matcher(fieldPassword).matches()) {
-            password.error =
-                "Пароль может содержать только символы латиницы, цифры и нижнее подчеркивание."
-            return true
-        }
-        return false
-    }
-
-    fun saveData(): Boolean {
+    private fun saveData(): Boolean {
         val fieldLogin = login.text.toString()
         val fieldPhone = phone.text.toString()
         val fieldEmail = email.text.toString()
         val fieldPassword = password.text.toString()
         isUnique = false
-        newUser = User(fieldLogin, fieldPhone, fieldEmail, fieldPassword)
-        if (!hasAnyErrors(fieldLogin, fieldPhone, fieldEmail, fieldPassword)) {
+        newUser = User(
+            fieldLogin,
+            fieldPhone,
+            fieldEmail,
+            fieldPassword
+        )
+        var hasErrorInField = false
+        val error = Errors()
+        val errorInLogin = error.errorsInLogin(fieldLogin)
+        val errorInPhone = error.errorsInPhone(fieldPhone)
+        val errorInEmail = error.errorsInEmail(fieldEmail)
+        val errorInPassword = error.errorsInPassword(fieldPassword)
+        if (!errorInLogin.equals("")) {
+            login.error = errorInLogin
+            hasErrorInField = true
+        }
+        else if (!errorInPhone.equals(""))
+        {
+            phone.error=errorInPhone
+            hasErrorInField=true
+        }
+        else if (!errorInEmail.equals(""))
+        {
+            email.error=errorInEmail
+            hasErrorInField=true
+        }
+        else if (!errorInPassword.equals(""))
+        {
+            password.error=errorInPassword
+            hasErrorInField=true
+        }
+        if (!hasErrorInField) {
             isUnique = true
             for (item in list) {
                 if (newUser.equals(item))
@@ -168,13 +143,11 @@ class Registration : AppCompatActivity() {
     }
 
     private fun mCheckInforInServer(newUser: User) {
-        writeData(object : OnSetDataListener {
+        writeData(object :
+            OnSetDataListener {
             override fun onStart() {
                 databaseReference.child("users").push().setValue(newUser).addOnFailureListener {
-                    val text = "Проблемы с записью в базу данных."
-                    val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@Registration, text, duration)
-                    toast.show()
+                    Toast.makeText(this@Registration, "Проблемы с записью в базу данных.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@Registration, MainActivity::class.java)
                     startActivity(intent)
                 }

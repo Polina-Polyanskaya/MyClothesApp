@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#3C39AF"
-    tools:context=".EnterUsers">
+    tools:context=".activities.EnterUsers">
 
     <TextView
         android:id="@+id/textView"

@@ -1,6 +1,7 @@
-package com.example.clothesapp
+package com.example.clothesapp.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.os.Bundle
 import android.view.View
@@ -12,9 +13,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.clothesapp.classesForActivities.Page
+import com.example.clothesapp.R
+import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
+import com.example.clothesapp.classesForActivities.Swipe
+import com.example.clothesapp.classesForActivities.InfoDialog
 import com.google.firebase.database.*
 
-class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
+class MyCatalog : AppCompatActivity(),
+    Swipe.SwipeControllerListener {
     private lateinit var menuButton: ImageButton
     private lateinit var plusButton: ImageButton
     private lateinit var trashCanButton: ImageButton
@@ -31,30 +38,27 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_catalog)
-        getSupportActionBar()?.hide()
+        supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerView = findViewById(R.id.recyclerViewInCatalog)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        recyclerView.hasFixedSize()
         plusButton = findViewById(R.id.plus)
-        infoButton=findViewById(R.id.infoButton)
+        infoButton = findViewById(R.id.infoButton)
         likedClothes = findViewById(R.id.LikedClothes)
         val arguments = intent.extras
         message = arguments?.get("message").toString()
         if (message.equals("user"))
             plusButton.visibility = View.GONE
         else
-            likedClothes.visibility=View.GONE
+            likedClothes.visibility = View.GONE
         menuButton = findViewById(R.id.imageButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        var query = databaseReference.child("photos")
+        val query = databaseReference.child("photos")
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
-                val text = "Проблемы с подключением к базе данных при чтении."
-                val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(this@MyCatalog, text, duration)
-                toast.show()
+                Toast.makeText(this@MyCatalog, "Проблемы с подключением к базе данных при чтении.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@MyCatalog, MainActivity::class.java)
                 startActivity(intent)
             }
@@ -64,13 +68,22 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
                     list.add(ds.getValue(Page::class.java)!!)
                 }
                 recyclerViewAdapterCatalog =
-                    RecyclerViewAdapterCatalog(message,list, this@MyCatalog, R.layout.single_view,
-                        arrayListOf())
+                    RecyclerViewAdapterCatalog(
+                        message,
+                        list,
+                        this@MyCatalog,
+                        R.layout.single_view,
+                        arrayListOf()
+                    )
                 recyclerView.adapter = recyclerViewAdapterCatalog
                 recyclerViewAdapterCatalog.notifyDataSetChanged()
                 if(message.equals("employee")) {
-                    var simpleCallback: ItemTouchHelper.SimpleCallback =
-                        SwipeController(0, LEFT, this@MyCatalog)
+                    val simpleCallback: ItemTouchHelper.SimpleCallback =
+                        Swipe(
+                            0,
+                            LEFT,
+                            this@MyCatalog
+                        )
                     ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView)
                 }
             }
@@ -88,11 +101,13 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
         val types = arrayOf(
             "Футболка",
             "Платье",
+            "Кофта",
             "Штаны",
-            "Куртка",
-            "Пальто"
+            "Верхняя одежда",
+            "Обувь"
         )
         val checkedTypes= booleanArrayOf(
+            false,
             false,
             false,
             false,
@@ -102,26 +117,33 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
         builder.setMultiChoiceItems(
             types,
             checkedTypes
-        ) { dialog, item, isChecked ->
+        ) { _, _, _ ->
         }
         builder.setTitle("Выберите категории для поиска.")
         builder.setPositiveButton(
             "Поиск"
         ) { dialog, which ->
-            var clearList=ArrayList<Page>()
+            val clearList=ArrayList<Page>()
                 for(item in list)
                 {
-                    var index=types.indexOf(item.type)
+                    val index=types.indexOf(item.type)
                     if(checkedTypes.get(index))
                         clearList.add(item)
                 }
-            recyclerViewAdapterCatalog=RecyclerViewAdapterCatalog(message,clearList,this@MyCatalog,R.layout.single_view,list)
+            recyclerViewAdapterCatalog=
+                RecyclerViewAdapterCatalog(
+                    message,
+                    clearList,
+                    this@MyCatalog,
+                    R.layout.single_view,
+                    list
+                )
             recyclerView.adapter=recyclerViewAdapterCatalog
             recyclerViewAdapterCatalog.notifyDataSetChanged()
         }
         builder.setNeutralButton(
             "Отмена"
-        ) { dialog, which ->
+        ) { _, _ ->
         }
         val dialog = builder.create()
         dialog.show()
@@ -141,7 +163,7 @@ class MyCatalog : AppCompatActivity(),SwipeController.SwipeControllerListener{
     }
 
     fun showInfo(view: View) {
-        dialog=InfoDialog()
+        dialog= InfoDialog()
         dialog.show(supportFragmentManager,"custom")
     }
 
