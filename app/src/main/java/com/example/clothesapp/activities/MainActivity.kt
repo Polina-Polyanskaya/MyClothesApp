@@ -18,10 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textAboutReg)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val str: String = resources.getString(R.string.toReg)
         val spannableString = SpannableString(str)
         val clickableSpan = object : ClickableSpan() {

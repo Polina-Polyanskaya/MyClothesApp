@@ -2,7 +2,6 @@ package com.example.clothesapp.activities
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.icu.lang.UCharacter
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,9 +30,9 @@ class LikedClothes : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_liked_clothes)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerView = findViewById(R.id.recyclerViewInLikedClothes)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -64,7 +63,7 @@ class LikedClothes : AppCompatActivity(),
                 "notUser",
                 listOfPages,
                 this@LikedClothes,
-                R.layout.single_view,
+                R.layout.catalog_photos,
                 arrayListOf()
             )
         recyclerView.adapter = recyclerViewAdapterCatalog
@@ -109,7 +108,7 @@ class LikedClothes : AppCompatActivity(),
                 "notUser",
                 listOfPages,
                 this@LikedClothes,
-                R.layout.single_view,
+                R.layout.catalog_photos,
                 arrayListOf()
             )
         recyclerView.adapter = recyclerViewAdapterCatalog

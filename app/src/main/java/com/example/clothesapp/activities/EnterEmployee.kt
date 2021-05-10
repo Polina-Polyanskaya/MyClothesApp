@@ -25,9 +25,9 @@ class EnterEmployee : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_enter_employee)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         login = findViewById(R.id.loginEnterEmployee)
         password = findViewById(R.id.passwordEnterEmployee)
         enter=findViewById(R.id.enterButtonEmployee)

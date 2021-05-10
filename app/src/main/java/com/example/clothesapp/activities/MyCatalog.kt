@@ -13,11 +13,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.clothesapp.classesForActivities.Page
 import com.example.clothesapp.R
+import com.example.clothesapp.classesForActivities.InfoDialog
+import com.example.clothesapp.classesForActivities.Page
 import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
 import com.example.clothesapp.classesForActivities.Swipe
-import com.example.clothesapp.classesForActivities.InfoDialog
 import com.google.firebase.database.*
 
 class MyCatalog : AppCompatActivity(),
@@ -37,9 +37,9 @@ class MyCatalog : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_my_catalog)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerView = findViewById(R.id.recyclerViewInCatalog)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -72,7 +72,7 @@ class MyCatalog : AppCompatActivity(),
                         message,
                         list,
                         this@MyCatalog,
-                        R.layout.single_view,
+                        R.layout.catalog_photos,
                         arrayListOf()
                     )
                 recyclerView.adapter = recyclerViewAdapterCatalog
@@ -135,7 +135,7 @@ class MyCatalog : AppCompatActivity(),
                     message,
                     clearList,
                     this@MyCatalog,
-                    R.layout.single_view,
+                    R.layout.catalog_photos,
                     list
                 )
             recyclerView.adapter=recyclerViewAdapterCatalog
@@ -168,8 +168,20 @@ class MyCatalog : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        val builder = AlertDialog.Builder(this@MyCatalog)
+        builder.setTitle("Вы точно хотите выйти?")
+        builder.setPositiveButton(
+            "Да"
+        ) { _, _ ->
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        builder.setNeutralButton(
+            "Нет"
+        ) { _, _ ->
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {

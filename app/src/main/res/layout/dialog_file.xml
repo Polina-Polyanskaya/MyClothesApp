@@ -2,36 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/teal_700">
 
     <TextView
         android:id="@+id/nameInInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_margin="20dp"
-        android:text="Благотоворительный фонд:  Поможем вместе"
-        android:textAppearance="?android:attr/textAppearanceLarge">
-    </TextView>
+        android:layout_margin="15dp"
+        android:text="Благотоворительный фонд: Поможем вместе"
+        android:textSize="20dp"
+    />
 
     <TextView
         android:id="@+id/phoneInInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
         android:text="Номер телефона:  8-9**-***-**-**"
-        android:textAppearance="?android:attr/textAppearanceLarge">
-    </TextView>
+        android:textSize="20dp"
+    />
 
     <TextView
         android:id="@+id/addressInInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
         android:text="Адрес: улица *** дом ***"
-        android:textAppearance="?android:attr/textAppearanceLarge">
-    </TextView>
+        android:textSize="20dp"
+    />
 
 </LinearLayout>

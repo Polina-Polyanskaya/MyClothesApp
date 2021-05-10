@@ -32,9 +32,9 @@ class Registration : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_registration)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         login = findViewById(R.id.Login)
         phone = findViewById(R.id.TelephoneEdit)

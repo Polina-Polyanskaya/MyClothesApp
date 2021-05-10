@@ -40,9 +40,9 @@ class AddClothes : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_add_clothes)
         supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         addPhotoButton = findViewById(R.id.addPhotoButton)
         addPageButton = findViewById(R.id.addButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
