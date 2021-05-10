@@ -48,10 +48,18 @@ class RecyclerViewAdapterCatalog(
         return arr.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         if (typeOfUser.equals("user")) {
-            holder.setIsRecyclable(false)
             viewToHolder.setOnClickListener {
+                holder.setIsRecyclable(false)
                 if (isFirstTime) {
                     time = System.currentTimeMillis()
                     isFirstTime = false
@@ -59,6 +67,7 @@ class RecyclerViewAdapterCatalog(
                     val manager = MyDbManager(context)
                     manager.openDb()
                     if (time + 500 > System.currentTimeMillis()) {
+                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_LONG).show()
                         val path = arr[position].path!!
                         val comment = arr[position].comment!!
                         var checker = true
@@ -67,7 +76,6 @@ class RecyclerViewAdapterCatalog(
                             if (i.path.equals(path))
                                 checker = false
                         }
-                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_LONG).show()
                         if (checker)
                             manager.insertToDb(path, comment)
                     }

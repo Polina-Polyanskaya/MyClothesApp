@@ -39,7 +39,6 @@ class LikedClothes : AppCompatActivity(),
         manager = MyDbManager(this)
         manager.openDb()
         listOfPages = manager.readDbData()
-        manager.closeDb()
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         val query = databaseReference.child("photos")
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -90,7 +89,6 @@ class LikedClothes : AppCompatActivity(),
     }
 
     fun reload(view: View) {
-        manager.openDb()
         for (i in listOfPages) {
             var checker = true
             for (j in list) {
@@ -102,7 +100,6 @@ class LikedClothes : AppCompatActivity(),
             }
         }
         listOfPages = manager.readDbData()
-        manager.closeDb()
         recyclerViewAdapterCatalog =
             RecyclerViewAdapterCatalog(
                 "notUser",
@@ -117,7 +114,7 @@ class LikedClothes : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-      //manager.closeDb()
+        manager.closeDb()
     }
 
     override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
