@@ -29,6 +29,7 @@ class Registration : AppCompatActivity() {
     private var hasReadError = false
     private var isUnique = false
     private lateinit var newUser: User
+    private var tableName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +120,7 @@ class Registration : AppCompatActivity() {
             hasErrorInField=true
         }
         if (!hasErrorInField) {
+            tableName = User.tableName
             isUnique = true
             for (item in list) {
                 if (newUser.equals(item))

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.clothesapp.R
 import com.example.clothesapp.activities.MainActivity
-import com.example.clothesapp.db.MyDbManager
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -22,11 +21,13 @@ class RecyclerViewAdapterCatalog(
     _arr: ArrayList<Page>,
     _context: Context,
     _layout: Int,
-    _arr2: ArrayList<Page>
+    _arr2: ArrayList<Page>,
+    _arr3: ArrayList<Page>
 ) : RecyclerView.Adapter<RecyclerViewAdapterCatalog.MyViewHolder>() {
 
     private var arr = _arr
     private var arr2 = _arr2
+    private var arr3 = _arr3
     private var context = _context
     private var layout = _layout
     private lateinit var databaseReference: DatabaseReference
@@ -57,6 +58,7 @@ class RecyclerViewAdapterCatalog(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        println("PPPPPP "+User.tableName)
         if (typeOfUser.equals("user")) {
             viewToHolder.setOnClickListener {
                 holder.setIsRecyclable(false)
@@ -64,23 +66,30 @@ class RecyclerViewAdapterCatalog(
                     time = System.currentTimeMillis()
                     isFirstTime = false
                 } else {
-                    val manager = MyDbManager(context)
-                    manager.openDb()
                     if (time + 500 > System.currentTimeMillis()) {
-                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_SHORT).show()
                         val path = arr[position].path!!
                         val comment = arr[position].comment!!
                         var checker = true
-                        val listOfPages = manager.readDbData()
-                        for (i in listOfPages) {
+                        for (i in arr3) {
                             if (i.path.equals(path))
                                 checker = false
                         }
-                        if (checker)
-                            manager.insertToDb(path, comment)
+                        if (checker) {
+                            databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
+                            databaseReference.child(User.tableName).push().setValue(Page(path,"",comment))
+                                .addOnFailureListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Проблемы с записью в базу данных.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent) 
+                                }
+                        }
                     }
                     time = System.currentTimeMillis()
-                    manager.closeDb()
                 }
             }
         }
@@ -136,10 +145,28 @@ class RecyclerViewAdapterCatalog(
                     arr2.removeAt(counter)
             }
         } else {
-            val manager = MyDbManager(context)
-            manager.openDb()
-            manager.deleteString(path)
-            manager.closeDb()
+            databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
+            val query = databaseReference.child(User.tableName)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        context,
+                        "Проблемы с подключением к базе данных при чтении.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        if (ds.getValue(Page::class.java)!!.path.equals(path)) {
+                            ds.ref.removeValue()
+                            break
+                        }
+                    }
+                }
+            })
         }
     }
 

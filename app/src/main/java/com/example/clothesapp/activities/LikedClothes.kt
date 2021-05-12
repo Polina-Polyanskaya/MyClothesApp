@@ -14,7 +14,7 @@ import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.Page
 import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
 import com.example.clothesapp.classesForActivities.Swipe
-import com.example.clothesapp.db.MyDbManager
+import com.example.clothesapp.classesForActivities.User
 import com.google.firebase.database.*
 
 class LikedClothes : AppCompatActivity(),
@@ -23,8 +23,7 @@ class LikedClothes : AppCompatActivity(),
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
-    private lateinit var manager: MyDbManager
-    private lateinit var listOfPages: ArrayList<Page>
+    private var listOfPages: ArrayList<Page> = ArrayList()
     private lateinit var databaseReference: DatabaseReference
     private val list: ArrayList<Page> = ArrayList()
 
@@ -36,12 +35,26 @@ class LikedClothes : AppCompatActivity(),
         recyclerView = findViewById(R.id.recyclerViewInLikedClothes)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        manager = MyDbManager(this)
-        manager.openDb()
-        listOfPages = manager.readDbData()
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        val query = databaseReference.child("photos")
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        val query1 = databaseReference.child(User.tableName)
+        query1.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(
+                    this@LikedClothes,
+                    "Проблемы с подключением к базе данных при чтении.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent = Intent(this@LikedClothes, MainActivity::class.java)
+                startActivity(intent)
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children)
+                    listOfPages.add(ds.getValue(Page::class.java)!!)
+            }
+        })
+        val query2 = databaseReference.child("photos")
+        query2.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(
                     this@LikedClothes,
@@ -63,7 +76,8 @@ class LikedClothes : AppCompatActivity(),
                 listOfPages,
                 this@LikedClothes,
                 R.layout.catalog_photos,
-                arrayListOf()
+                arrayListOf(),
+                listOfPages
             )
         recyclerView.adapter = recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
@@ -89,6 +103,7 @@ class LikedClothes : AppCompatActivity(),
     }
 
     fun reload(view: View) {
+        /*
         for (i in listOfPages) {
             var checker = true
             for (j in list) {
@@ -110,11 +125,7 @@ class LikedClothes : AppCompatActivity(),
             )
         recyclerView.adapter = recyclerViewAdapterCatalog
         recyclerViewAdapterCatalog.notifyDataSetChanged()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        manager.closeDb()
+         */
     }
 
     override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {

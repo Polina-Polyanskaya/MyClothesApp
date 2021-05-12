@@ -73,6 +73,7 @@ class MyCatalog : AppCompatActivity(),
                         list,
                         this@MyCatalog,
                         R.layout.catalog_photos,
+                        arrayListOf(),
                         arrayListOf()
                     )
                 recyclerView.adapter = recyclerViewAdapterCatalog
@@ -136,7 +137,8 @@ class MyCatalog : AppCompatActivity(),
                     clearList,
                     this@MyCatalog,
                     R.layout.catalog_photos,
-                    list
+                    list,
+                    arrayListOf()
                 )
             recyclerView.adapter=recyclerViewAdapterCatalog
             recyclerViewAdapterCatalog.notifyDataSetChanged()
