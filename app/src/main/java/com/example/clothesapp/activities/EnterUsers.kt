@@ -74,6 +74,7 @@ class EnterUsers : AppCompatActivity() {
         }
         if (!hasErrorInField) {
             User.tableName=fieldLogin
+            User.wasLoaded=false
             for (item in list) {
                 if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
                     isUnique = false

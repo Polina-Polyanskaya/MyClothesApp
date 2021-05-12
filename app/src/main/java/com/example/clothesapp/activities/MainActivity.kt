@@ -11,10 +11,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clothesapp.R
+import com.example.clothesapp.db.myDbManager
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var text: TextView
+    private var manager=myDbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +45,19 @@ class MainActivity : AppCompatActivity() {
         text.setText(spannableString, TextView.BufferType.SPANNABLE)
     }
 
-    fun toNextActivity(view:View)
-    {
-            val intent = Intent(this, EnterTwoTypes::class.java)
-            startActivity(intent)
+    fun toNextActivity(view: View) {
+        manager.openDb()
+        manager.clearDbData()
+        val intent = Intent(this, EnterTwoTypes::class.java)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        manager.closeDb()
+    }
+
+    override fun onBackPressed() {
+
     }
 }

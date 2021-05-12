@@ -14,10 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.clothesapp.R
-import com.example.clothesapp.classesForActivities.InfoDialog
-import com.example.clothesapp.classesForActivities.Page
-import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
-import com.example.clothesapp.classesForActivities.Swipe
+import com.example.clothesapp.classesForActivities.*
+import com.example.clothesapp.db.myDbManager
 import com.google.firebase.database.*
 
 class MyCatalog : AppCompatActivity(),
@@ -34,6 +32,7 @@ class MyCatalog : AppCompatActivity(),
     private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
     private lateinit var likedClothes:ImageButton
     private lateinit var dialog: DialogFragment
+    private var manager = myDbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +54,31 @@ class MyCatalog : AppCompatActivity(),
         menuButton = findViewById(R.id.imageButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        val query = databaseReference.child("photos")
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        manager.openDb()
+        if(!User.wasLoaded) {
+            val query = databaseReference.child(User.tableName)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        this@MyCatalog,
+                        "Проблемы с подключением к базе данных при чтении.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val intent = Intent(this@MyCatalog, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        val page=ds.getValue(Page::class.java)!!
+                        manager.insertToDb(page.path!!,page.comment!!)
+                    }
+                    User.wasLoaded = true
+                }
+            })
+        }
+        val query2 = databaseReference.child("photos")
+        query2.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MyCatalog, "Проблемы с подключением к базе данных при чтении.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@MyCatalog, MainActivity::class.java)
@@ -73,7 +95,6 @@ class MyCatalog : AppCompatActivity(),
                         list,
                         this@MyCatalog,
                         R.layout.catalog_photos,
-                        arrayListOf(),
                         arrayListOf()
                     )
                 recyclerView.adapter = recyclerViewAdapterCatalog
@@ -125,20 +146,19 @@ class MyCatalog : AppCompatActivity(),
             "Поиск"
         ) { dialog, which ->
             val clearList=ArrayList<Page>()
-                for(item in list)
-                {
-                    val index=types.indexOf(item.type)
-                    if(checkedTypes.get(index))
-                        clearList.add(item)
-                }
+            for(item in list)
+            {
+                val index=types.indexOf(item.type)
+                if(checkedTypes.get(index))
+                    clearList.add(item)
+            }
             recyclerViewAdapterCatalog=
                 RecyclerViewAdapterCatalog(
                     message,
                     clearList,
                     this@MyCatalog,
                     R.layout.catalog_photos,
-                    list,
-                    arrayListOf()
+                    list
                 )
             recyclerView.adapter=recyclerViewAdapterCatalog
             recyclerViewAdapterCatalog.notifyDataSetChanged()
@@ -175,6 +195,38 @@ class MyCatalog : AppCompatActivity(),
         builder.setPositiveButton(
             "Да"
         ) { _, _ ->
+            if(!message.equals("employee"))
+            {
+                val query = databaseReference.child(User.tableName)
+                query.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        Toast.makeText(
+                            this@MyCatalog,
+                            "Проблемы с подключением к базе данных при чтении.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this@MyCatalog, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (ds in snapshot.children)
+                                ds.ref.removeValue()
+                    }
+                })
+                val listOfPages=manager.readDbData()
+                for(i in listOfPages) {
+                    databaseReference.child(User.tableName).push().setValue(i).addOnFailureListener {
+                        Toast.makeText(
+                            this@MyCatalog,
+                            "Проблемы с записью в базу данных.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this@MyCatalog, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -186,10 +238,14 @@ class MyCatalog : AppCompatActivity(),
         dialog.show()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        manager.closeDb()
+    }
+
     override fun swipe(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         if (viewHolder is RecyclerViewAdapterCatalog.MyViewHolder) {
-                recyclerViewAdapterCatalog.removeItem(position)
+            recyclerViewAdapterCatalog.removeItem(position)
         }
     }
 }
-
