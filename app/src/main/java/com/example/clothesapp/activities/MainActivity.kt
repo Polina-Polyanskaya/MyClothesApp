@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clothesapp.R
+import com.example.clothesapp.db.DataBaseInfo
 import com.example.clothesapp.db.MyDbManager
 
 class MainActivity : AppCompatActivity() {

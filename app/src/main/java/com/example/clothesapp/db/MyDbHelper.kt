@@ -9,7 +9,7 @@ class MyDbHelper(context: Context) : SQLiteOpenHelper(
 ) {
 
     companion object {
-        const val DATABASE_NAME = "myDb.db"
+        const val DATABASE_NAME = "myDB.db"
         const val DATABASE_VERSION = 1
     }
 

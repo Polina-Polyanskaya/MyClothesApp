@@ -55,7 +55,7 @@ class MyCatalog : AppCompatActivity(),
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         manager.openDb()
-        if(!User.wasLoaded) {
+        if(!User.wasLoaded && !message.equals("employee")) {
             val query = databaseReference.child(User.tableName)
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
