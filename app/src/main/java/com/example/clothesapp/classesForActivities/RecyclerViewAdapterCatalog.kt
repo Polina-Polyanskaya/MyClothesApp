@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.clothesapp.R
 import com.example.clothesapp.activities.MainActivity
-import com.example.clothesapp.db.myDbManager
+import com.example.clothesapp.db.MyDbManager
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -64,7 +64,7 @@ class RecyclerViewAdapterCatalog(
                     time = System.currentTimeMillis()
                     isFirstTime = false
                 } else {
-                    val manager = myDbManager(context)
+                    val manager = MyDbManager(context)
                     manager.openDb()
                     if (time + 500 > System.currentTimeMillis()) {
                         Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_LONG).show()
@@ -136,7 +136,7 @@ class RecyclerViewAdapterCatalog(
                     arr2.removeAt(counter)
             }
         } else {
-            val manager = myDbManager(context)
+            val manager = MyDbManager(context)
             manager.openDb()
             manager.deleteString(path)
             manager.closeDb()

@@ -3,16 +3,15 @@ package com.example.clothesapp.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.provider.BaseColumns
 import com.example.clothesapp.classesForActivities.Page
 
-class myDbManager(val context:Context) {
+class MyDbManager(val context: Context) {
 
-    val helper = myDbHelper(context)
+    private val myDbHelper = MyDbHelper(context)
     var db: SQLiteDatabase? = null
 
     fun openDb() {
-        db = helper.writableDatabase
+        db = myDbHelper.writableDatabase
     }
 
     fun insertToDb(
@@ -58,13 +57,12 @@ class myDbManager(val context:Context) {
         )
     }
 
-    fun clearDbData()
-    {
-        db?.delete(DataBaseInfo.TABLE_NAME,null,null)
+    fun clearDbData() {
+        db?.delete(DataBaseInfo.TABLE_NAME, null, null)
     }
 
-    fun closeDb()
-    {
-        helper.close()
+    fun closeDb() {
+        myDbHelper.close()
     }
+
 }

@@ -62,4 +62,5 @@ class User {
         email = _email
         password = _password
     }
+
 }

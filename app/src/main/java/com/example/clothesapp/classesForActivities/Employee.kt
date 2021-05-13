@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 class Employee {
+
     var login: String? = null
         get() = field
         set(value) {
@@ -24,4 +25,5 @@ class Employee {
         login = _login
         password = _password
     }
+
 }

@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.clothesapp.R
 
 class InfoDialog : DialogFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -16,4 +17,5 @@ class InfoDialog : DialogFragment() {
         dialog?.setTitle("Контакты")
         return inflater.inflate(R.layout.dialog_file, container, false)
     }
+
 }

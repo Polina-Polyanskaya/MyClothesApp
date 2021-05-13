@@ -26,9 +26,9 @@ class EnterUsers : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_enter_users)
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         firebaseDataBase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
         login = findViewById(R.id.LoginEnter)

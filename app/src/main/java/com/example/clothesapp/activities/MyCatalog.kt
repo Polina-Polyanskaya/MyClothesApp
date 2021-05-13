@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.*
-import com.example.clothesapp.db.myDbManager
+import com.example.clothesapp.db.MyDbManager
 import com.google.firebase.database.*
 
 class MyCatalog : AppCompatActivity(),
@@ -32,13 +32,13 @@ class MyCatalog : AppCompatActivity(),
     private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
     private lateinit var likedClothes:ImageButton
     private lateinit var dialog: DialogFragment
-    private var manager = myDbManager(this)
+    private var manager = MyDbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_my_catalog)
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerView = findViewById(R.id.recyclerViewInCatalog)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager

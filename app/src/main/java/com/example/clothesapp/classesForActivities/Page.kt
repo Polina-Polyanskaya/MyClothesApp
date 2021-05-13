@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 class Page {
+
     var path: String? = null
         get() = field
         set(value) {
@@ -32,4 +33,5 @@ class Page {
         type = _type
         comment = _comment
     }
+
 }

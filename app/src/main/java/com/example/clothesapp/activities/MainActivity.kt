@@ -11,19 +11,19 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clothesapp.R
-import com.example.clothesapp.db.myDbManager
+import com.example.clothesapp.db.MyDbManager
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var text: TextView
-    private var manager=myDbManager(this)
+    private var manager=MyDbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textAboutReg)
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val str: String = resources.getString(R.string.toReg)
         val spannableString = SpannableString(str)
         val clickableSpan = object : ClickableSpan() {

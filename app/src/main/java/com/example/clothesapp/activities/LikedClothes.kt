@@ -14,7 +14,7 @@ import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.Page
 import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
 import com.example.clothesapp.classesForActivities.Swipe
-import com.example.clothesapp.db.myDbManager
+import com.example.clothesapp.db.MyDbManager
 import com.google.firebase.database.*
 
 class LikedClothes : AppCompatActivity(),
@@ -23,20 +23,20 @@ class LikedClothes : AppCompatActivity(),
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var recyclerViewAdapterCatalog: RecyclerViewAdapterCatalog
-    private lateinit var manager: myDbManager
+    private lateinit var manager: MyDbManager
     private lateinit var listOfPages: ArrayList<Page>
     private lateinit var databaseReference: DatabaseReference
     private val list: ArrayList<Page> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_liked_clothes)
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerView = findViewById(R.id.recyclerViewInLikedClothes)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        manager = myDbManager(this)
+        manager = MyDbManager(this)
         manager.openDb()
         listOfPages = manager.readDbData()
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")

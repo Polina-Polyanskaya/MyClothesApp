@@ -3,6 +3,7 @@ package com.example.clothesapp.classesForActivities
 import java.util.regex.Pattern
 
 class Errors {
+
     fun errorsInLogin(fieldLogin: String): String {
         if (fieldLogin.isEmpty())
             return "Логин не может быть пустым."
@@ -39,4 +40,5 @@ class Errors {
             return "Это не адрес электронной почты."
         return ""
     }
+
 }

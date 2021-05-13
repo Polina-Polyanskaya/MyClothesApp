@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.clothesapp.classesForActivities.Employee
 import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.Errors
-import com.example.clothesapp.classesForActivities.User
 import com.google.firebase.database.*
 
 class EnterEmployee : AppCompatActivity() {
@@ -23,13 +22,12 @@ class EnterEmployee : AppCompatActivity() {
     private val list: ArrayList<Employee> = ArrayList<Employee>()
     private var hasReadError = false
     private var isUnique = true
-    private var tableName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_enter_employee)
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         login = findViewById(R.id.loginEnterEmployee)
         password = findViewById(R.id.passwordEnterEmployee)
         enter=findViewById(R.id.enterButtonEmployee)
@@ -74,7 +72,6 @@ class EnterEmployee : AppCompatActivity() {
             hasErrorInField=true
         }
         if (!hasErrorInField) {
-            tableName= User.tableName
             for (item in list) {
                 if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
                     isUnique = false
