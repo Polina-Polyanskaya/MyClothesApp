@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.clothesapp.R
@@ -29,7 +30,7 @@ class RecyclerViewAdapterCatalog(
     private var arr2 = _arr2
     private var context = _context
     private var layout = _layout
-    private lateinit var databaseReference: DatabaseReference
+    private var databaseReference=FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
     private lateinit var storageReference: StorageReference
     private var typeOfUser = _typeOfUser
     private var time: Long = 0
@@ -76,8 +77,18 @@ class RecyclerViewAdapterCatalog(
                             if (i.path.equals(path))
                                 checker = false
                         }
-                        if (checker)
+                        if (checker) {
                             manager.insertToDb(path, comment)
+                            databaseReference.child(User.tableName).push().setValue(Page(path,"",comment)).addOnFailureListener {
+                                Toast.makeText(
+                                    context,
+                                    "Проблемы с записью в базу данных.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                            }
+                        }
                     }
                     time = System.currentTimeMillis()
                     manager.closeDb()
@@ -100,7 +111,6 @@ class RecyclerViewAdapterCatalog(
         arr.removeAt(position)
         notifyItemRemoved(position)
         if (typeOfUser.equals("employee")) {
-            databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
             val query = databaseReference.child("photos")
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -139,6 +149,28 @@ class RecyclerViewAdapterCatalog(
             val manager = MyDbManager(context)
             manager.openDb()
             manager.deleteString(path)
+            val query = databaseReference.child(User.tableName)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        context,
+                        "Проблемы с подключением к базе данных при чтении.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        val page=ds.getValue(Page::class.java)!!
+                        if(page.path!!.equals(path)) {
+                            ds.ref.removeValue()
+                            break
+                        }
+                    }
+                }
+            })
             manager.closeDb()
         }
     }

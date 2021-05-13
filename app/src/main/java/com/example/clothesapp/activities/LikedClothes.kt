@@ -14,6 +14,7 @@ import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.Page
 import com.example.clothesapp.classesForActivities.RecyclerViewAdapterCatalog
 import com.example.clothesapp.classesForActivities.Swipe
+import com.example.clothesapp.classesForActivities.User
 import com.example.clothesapp.db.MyDbManager
 import com.google.firebase.database.*
 
@@ -97,6 +98,28 @@ class LikedClothes : AppCompatActivity(),
             }
             if (checker) {
                 manager.deleteString(i.path!!)
+                val query = databaseReference.child(User.tableName)
+                query.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        Toast.makeText(
+                            this@LikedClothes,
+                            "Проблемы с подключением к базе данных при чтении.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this@LikedClothes, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (ds in snapshot.children) {
+                            val page=ds.getValue(Page::class.java)!!
+                            if(page.path!!.equals(i.path!!)) {
+                                ds.ref.removeValue()
+                                break
+                            }
+                        }
+                    }
+                })
             }
         }
         listOfPages = manager.readDbData()

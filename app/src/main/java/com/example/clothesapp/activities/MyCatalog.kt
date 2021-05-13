@@ -195,38 +195,6 @@ class MyCatalog : AppCompatActivity(),
         builder.setPositiveButton(
             "Да"
         ) { _, _ ->
-            if(!message.equals("employee"))
-            {
-                val query = databaseReference.child(User.tableName)
-                query.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(
-                            this@MyCatalog,
-                            "Проблемы с подключением к базе данных при чтении.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        val intent = Intent(this@MyCatalog, MainActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (ds in snapshot.children)
-                                ds.ref.removeValue()
-                    }
-                })
-                val listOfPages=manager.readDbData()
-                for(i in listOfPages) {
-                    databaseReference.child(User.tableName).push().setValue(i).addOnFailureListener {
-                        Toast.makeText(
-                            this@MyCatalog,
-                            "Проблемы с записью в базу данных.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        val intent = Intent(this@MyCatalog, MainActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
-            }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

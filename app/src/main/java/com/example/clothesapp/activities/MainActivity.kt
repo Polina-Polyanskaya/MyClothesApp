@@ -24,12 +24,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textAboutReg)
         supportActionBar?.hide()
+        manager.openDb()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val str: String = resources.getString(R.string.toReg)
         val spannableString = SpannableString(str)
         val clickableSpan = object : ClickableSpan() {
 
             override fun onClick(view: View) {
+                manager.clearDbData()
                 val intent= Intent(this@MainActivity, Registration::class.java)
                 startActivity(intent)
             }
@@ -47,7 +49,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toNextActivity(view: View) {
-        manager.openDb()
         manager.clearDbData()
         val intent = Intent(this, EnterTwoTypes::class.java)
         startActivity(intent)
