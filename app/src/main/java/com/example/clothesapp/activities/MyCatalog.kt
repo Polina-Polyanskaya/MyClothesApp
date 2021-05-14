@@ -42,16 +42,16 @@ class MyCatalog : AppCompatActivity(),
         recyclerView = findViewById(R.id.recyclerViewInCatalog)
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        plusButton = findViewById(R.id.plus)
+        plusButton = findViewById(R.id.plusButton)
         infoButton = findViewById(R.id.infoButton)
-        likedClothes = findViewById(R.id.LikedClothes)
+        likedClothes = findViewById(R.id.likedClothesButton)
         val arguments = intent.extras
         message = arguments?.get("message").toString()
         if (message.equals("user"))
             plusButton.visibility = View.GONE
         else
             likedClothes.visibility = View.GONE
-        menuButton = findViewById(R.id.imageButton)
+        menuButton = findViewById(R.id.sortButton)
         trashCanButton = findViewById(R.id.trashCanButton)
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         manager.openDb()

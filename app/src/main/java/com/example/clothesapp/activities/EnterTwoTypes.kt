@@ -16,12 +16,14 @@ class EnterTwoTypes : AppCompatActivity() {
     }
 
     fun toNextActivityUsers(view: View) {
-        val intent = Intent(this, EnterUsers::class.java)
+        val intent = Intent(this, Enter::class.java)
+        intent.putExtra("message", "user");
         startActivity(intent)
     }
 
     fun toNextActivityEmployee(view:View) {
-        val intent = Intent(this, EnterEmployee::class.java)
+        val intent = Intent(this, Enter::class.java)
+        intent.putExtra("message", "employee");
         startActivity(intent)
     }
 }

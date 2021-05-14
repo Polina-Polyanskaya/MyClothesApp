@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#3C39AF"
-    tools:context=".activities.EnterUsers">
+    tools:context=".activities.Enter">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/enterText"
         android:layout_width="106dp"
         android:layout_height="35dp"
         android:layout_marginStart="32dp"
@@ -25,7 +24,7 @@
         app:layout_constraintVertical_bias="0.194" />
 
     <EditText
-        android:id="@+id/LoginEnter"
+        android:id="@+id/loginEnter"
         android:layout_width="320dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
@@ -43,7 +42,7 @@
         app:layout_constraintVertical_bias="0.375" />
 
     <EditText
-        android:id="@+id/PasswordEnter"
+        android:id="@+id/passwordEnter"
         android:layout_width="320dp"
         android:layout_height="42dp"
         android:backgroundTint="@color/purple_700"
@@ -60,20 +59,19 @@
         app:layout_constraintVertical_bias="0.499" />
 
     <Button
-        android:id="@+id/EnterButton2"
+        android:id="@+id/enterButton"
         android:layout_width="102dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@color/purple_700"
         android:gravity="center"
+        android:onClick="toNextActivityEmployee"
         android:text="@string/toEnter"
-        android:onClick="toNextActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.734" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,7 +60,7 @@ class LikedClothes : AppCompatActivity(),
         })
         recyclerViewAdapterCatalog =
             RecyclerViewAdapterCatalog(
-                "notUser",
+                "UserCanDelete",
                 listOfPages,
                 this@LikedClothes,
                 R.layout.catalog_photos,
@@ -125,7 +125,7 @@ class LikedClothes : AppCompatActivity(),
         listOfPages = manager.readDbData()
         recyclerViewAdapterCatalog =
             RecyclerViewAdapterCatalog(
-                "notUser",
+                "UserCanDelete",
                 listOfPages,
                 this@LikedClothes,
                 R.layout.catalog_photos,

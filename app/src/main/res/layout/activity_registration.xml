@@ -8,7 +8,7 @@
     tools:context=".activities.Registration">
 
     <TextView
-        android:id="@+id/RegistrationText"
+        android:id="@+id/registrationText"
         android:layout_width="170dp"
         android:layout_height="35dp"
         android:gravity="center"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.122" />
 
     <EditText
-        android:id="@+id/Login"
+        android:id="@+id/loginReg"
         android:layout_width="320dp"
         android:layout_height="48dp"
         android:backgroundTint="@color/purple_700"
@@ -40,7 +40,7 @@
         app:layout_constraintVertical_bias="0.289" />
 
     <EditText
-        android:id="@+id/TelephoneEdit"
+        android:id="@+id/phoneReg"
         android:layout_width="320dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -60,7 +60,7 @@
         app:layout_constraintVertical_bias="0.405" />
 
     <EditText
-        android:id="@+id/EmailEdit"
+        android:id="@+id/emailReg"
         android:layout_width="320dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -79,7 +79,7 @@
         app:layout_constraintVertical_bias="0.522" />
 
     <EditText
-        android:id="@+id/PasswordEdit"
+        android:id="@+id/passwordReg"
         android:layout_width="320dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -99,7 +99,7 @@
         app:layout_constraintVertical_bias="0.636" />
 
     <Button
-        android:id="@+id/SaveButton"
+        android:id="@+id/saveRegButton"
         android:layout_width="146dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"

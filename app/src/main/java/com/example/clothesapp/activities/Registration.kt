@@ -36,10 +36,10 @@ class Registration : AppCompatActivity() {
         supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
-        login = findViewById(R.id.Login)
-        phone = findViewById(R.id.TelephoneEdit)
-        email = findViewById(R.id.EmailEdit)
-        password = findViewById(R.id.PasswordEdit)
+        login = findViewById(R.id.loginReg)
+        phone = findViewById(R.id.phoneReg)
+        email = findViewById(R.id.emailReg)
+        password = findViewById(R.id.passwordReg)
         phone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (!s.toString().startsWith("+79")) {
@@ -62,7 +62,7 @@ class Registration : AppCompatActivity() {
             ) {
             }
         })
-        registrationButton = findViewById(R.id.SaveButton)
+        registrationButton = findViewById(R.id.saveRegButton)
         list = ArrayList()
         databaseReference
             .addValueEventListener(object : ValueEventListener {
@@ -81,7 +81,7 @@ class Registration : AppCompatActivity() {
             })
     }
 
-    private fun saveData(): Boolean {
+    private fun checkFieldsValues(): Boolean {
         val fieldLogin = login.text.toString()
         val fieldPhone = phone.text.toString()
         val fieldEmail = email.text.toString()
@@ -144,7 +144,7 @@ class Registration : AppCompatActivity() {
         listener.onStart()
     }
 
-    private fun mCheckInforInServer(newUser: User) {
+    private fun writeToDb(newUser: User) {
         writeData(object :
             OnSetDataListener {
             override fun onStart() {
@@ -159,8 +159,8 @@ class Registration : AppCompatActivity() {
 
     fun toNextActivity(view: View) {
         if (!hasReadError) {
-            if (saveData()) {
-                mCheckInforInServer(newUser)
+            if (checkFieldsValues()) {
+                writeToDb(newUser)
                 val intent = Intent(this@Registration, MyCatalog::class.java)
                 intent.putExtra("message", "user");
                 startActivity(intent)

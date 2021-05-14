@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.833" />
 
     <Button
-        android:id="@+id/buttonEnter"
+        android:id="@+id/enterInAppButton"
         android:layout_width="102dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
@@ -44,7 +44,7 @@
         app:layout_constraintVertical_bias="0.748" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/clothesImage"
         android:layout_width="377dp"
         android:layout_height="370dp"
         app:layout_constraintBottom_toBottomOf="parent"

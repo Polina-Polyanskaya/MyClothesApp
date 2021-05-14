@@ -3,45 +3,50 @@ package com.example.clothesapp.activities
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clothesapp.R
 import com.example.clothesapp.classesForActivities.Employee
 import com.example.clothesapp.classesForActivities.Errors
+import com.example.clothesapp.classesForActivities.User
 import com.google.firebase.database.*
 
 
-class EnterEmployee : AppCompatActivity() {
+class Enter : AppCompatActivity() {
     private lateinit var login: EditText
     private lateinit var password: EditText
     private lateinit var enter: Button
     private lateinit var firebaseDataBase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
-    private val list: ArrayList<Employee> = ArrayList<Employee>()
+    private val listEmployee = ArrayList<Employee>()
+    private val listUser = ArrayList<User>()
     private var hasReadError = false
     private var isUnique = true
+    private var message=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_enter_employee)
+        setContentView(R.layout.activity_enter)
         supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        login = findViewById(R.id.loginEnterEmployee)
-        password = findViewById(R.id.passwordEnterEmployee)
-        enter=findViewById(R.id.enterButtonEmployee)
+        val arguments = intent.extras
+        message = arguments?.get("message").toString()
+        login = findViewById(R.id.loginEnter)
+        password = findViewById(R.id.passwordEnter)
+        enter=findViewById(R.id.enterButton)
         firebaseDataBase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
         databaseReference
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.child("employees").children) {
-                        list.add(ds.getValue(Employee::class.java)!!)
+                    for (ds in dataSnapshot.child(message).children) {
+                        if(message.equals("employee"))
+                            listEmployee.add(ds.getValue(Employee::class.java)!!)
+                        else
+                            listUser.add(ds.getValue(User::class.java)!!)
                     }
                 }
 
@@ -49,15 +54,16 @@ class EnterEmployee : AppCompatActivity() {
                     hasReadError = true
                     val text = "Проблемы с подключением к базе данных при чтении."
                     val duration = Toast.LENGTH_SHORT
-                    val toast = Toast.makeText(this@EnterEmployee, text, duration)
+                    val toast = Toast.makeText(this@Enter, text, duration)
                     toast.show()
-                    val intent = Intent(this@EnterEmployee, MainActivity::class.java)
+                    val intent = Intent(this@Enter, MainActivity::class.java)
                     startActivity(intent)
                 }
             })
+
     }
 
-    private fun saveEnterData():Boolean
+    private fun checkFieldsValues():Boolean
     {
         val fieldLogin = login.text.toString()
         val fieldPassword = password.text.toString()
@@ -76,24 +82,37 @@ class EnterEmployee : AppCompatActivity() {
             hasErrorInField=true
         }
         if (!hasErrorInField) {
-            for (item in list) {
-                if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
-                    isUnique = false
+            User.wasLoaded = false
+            User.tableName = fieldLogin
+            if (message.equals("employee"))
+                for (item in listEmployee) {
+                    if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
+                        isUnique = false
+                }
+            else {
+                for (item in listUser) {
+                    if (fieldLogin.equals(item.login) && fieldPassword.equals(item.password))
+                        isUnique = false
+                }
             }
             if (isUnique) {
-                val text = "Такого сотрудника нет."
-                val duration = Toast.LENGTH_SHORT
-                val toast = Toast.makeText(this, text, duration)
-                toast.show()
+                if(message.equals("user")) {
+                    Toast.makeText(this, "Такого пользователя нет.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                else {
+                    Toast.makeText(this, "Такого сотрудника нет.", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
         return isUnique
     }
 
     fun toNextActivityEmployee(view: View) {
-        if (!saveEnterData()) {
+        if (!checkFieldsValues()) {
             val intent = Intent(this, MyCatalog::class.java)
-            intent.putExtra("message", "employee");
+            intent.putExtra("message", message);
             startActivity(intent)
         }
     }
