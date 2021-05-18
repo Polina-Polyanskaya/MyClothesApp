@@ -68,7 +68,7 @@ class RecyclerViewAdapterCatalog(
                     val manager = MyDbManager(context)
                     manager.openDb()
                     if (time + 500 > System.currentTimeMillis()) {
-                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Добавлено в понравившиеся", Toast.LENGTH_SHORT).show()
                         val path = arr[position].path!!
                         val comment = arr[position].comment!!
                         var checker = true

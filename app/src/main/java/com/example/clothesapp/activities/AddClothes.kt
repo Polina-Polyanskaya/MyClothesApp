@@ -22,7 +22,8 @@ import com.google.firebase.storage.StorageReference
 import java.util.*
 
 
-class   AddClothes : AppCompatActivity() {
+class
+AddClothes : AppCompatActivity() {
     private lateinit var clothesSpinner: Spinner
     private var typeOfClothes = ""
     private lateinit var addPhotoButton: Button

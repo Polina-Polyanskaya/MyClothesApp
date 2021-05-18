@@ -19,7 +19,6 @@ class Enter : AppCompatActivity() {
     private lateinit var login: EditText
     private lateinit var password: EditText
     private lateinit var enter: Button
-    private lateinit var firebaseDataBase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private val listEmployee = ArrayList<Employee>()
     private val listUser = ArrayList<User>()
@@ -37,12 +36,11 @@ class Enter : AppCompatActivity() {
         login = findViewById(R.id.loginEnter)
         password = findViewById(R.id.passwordEnter)
         enter=findViewById(R.id.enterButton)
-        firebaseDataBase = FirebaseDatabase.getInstance()
-        databaseReference = firebaseDataBase.getReference("EDMT_FIREBASE")
+        databaseReference = FirebaseDatabase.getInstance().getReference("EDMT_FIREBASE")
         databaseReference
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.child(message).children) {
+                    for (ds in dataSnapshot.child(message+"s").children) {
                         if(message.equals("employee"))
                             listEmployee.add(ds.getValue(Employee::class.java)!!)
                         else
